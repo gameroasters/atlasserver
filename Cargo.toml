@@ -1,0 +1,37 @@
+[package]
+name = "atlas"
+version = "0.1.0"
+authors = [
+    "Stephan Dilly <dilly.stephan@gmail.com>",
+    "lyon <lyonbeckers@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+async-trait = "0.1"
+frunk = "0.3.1"
+warp = "0.3"
+tracing = "0.1"
+thiserror = "1.0"
+tokio = { version = "1.1", default-features = false, features = ["macros", "rt-multi-thread"] }
+rusoto_core = "0.46"
+rusoto_dynamodb = "0.46"
+uuid = { version = "0.8", features = ["v4"] }
+serde = "1.0"
+chrono = "0.4"
+protobuf = "2.22"
+
+[features]
+default = []
+json-proto = []
+
+[dev-dependencies]
+anyhow = "1.0"
+async-trait = "0.1"
+chrono = "0.4"
+iap = "0.2"
+mockito = "0.30"
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"]}
+
+[build-dependencies]
+protobuf-codegen-pure = "2.3"

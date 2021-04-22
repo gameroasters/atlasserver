@@ -1,0 +1,38 @@
+syntax = "proto3";
+// import "rustproto.proto";
+
+// option (rustproto.serde_derive_all) = true;
+option csharp_namespace = "GR.S4.Controller.Backend";
+
+message RegisterRequest { 
+  uint32 clientVersion = 1;
+  string clientLanguage = 2;
+}
+
+message LoginRequest {
+  UserCredentials user = 1;
+  uint32 clientVersion = 2;
+  string clientLanguage = 3;
+}
+
+message LoginResponse { bool isOutdated = 1; }
+
+message UserCredentials {
+  string id = 1;
+  string secret = 2;
+}
+
+message RegisterResponse {
+  UserCredentials user = 1;
+  bool isOutdated = 2;
+}
+
+message RejectionResponse {
+  SessionFilterRejection sessionFilterRejection = 1;
+
+  enum SessionFilterRejection {
+    NONE = 0;
+    INVALID = 1;
+    SESSION_NOT_FOUND = 2;
+  }
+}
