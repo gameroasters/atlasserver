@@ -10,6 +10,9 @@ use thiserror::Error;
 
 #[derive(Error, Debug)]
 pub enum Error {
+	#[error("unknown user error: {0}")]
+	UnknownUserError(String),
+
 	#[error("io error: {0}")]
 	IoError(#[from] std::io::Error),
 

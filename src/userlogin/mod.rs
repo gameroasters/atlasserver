@@ -70,6 +70,18 @@ impl UserLoginResource {
 	}
 
 	#[instrument(skip(self))]
+	pub async fn get_secret(
+		&self,
+		user_id: &str,
+	) -> error::Result<String> {
+		if let Some(user) = self.users.get_user(user_id).await {
+			return Ok(user.secret);
+		}
+
+		Err(error::Error::UnknownUserError(user_id.to_string()))
+	}
+
+	#[instrument(skip(self))]
 	async fn user_login(
 		&self,
 		login_request: schema::LoginRequest,
@@ -726,6 +738,38 @@ mod tests {
 			users.get_user(&db_session.user_id).await.unwrap();
 		assert_eq!(db_user.language, "en-CA");
 		assert_eq!(db_user.session, Some(session.clone()));
+	}
+
+	#[tokio::test]
+	async fn test_user_credentials() {
+		let sessions = Arc::new(InMemorySessionDB::default());
+		let users = Arc::new(InMemoryUserDB::default());
+
+		let secret = Uuid::new_v4().to_string();
+		let id = Uuid::new_v4().to_string();
+		users
+			.save_user(&User {
+				id: id.clone(),
+				secret: secret.clone(),
+				..User::default()
+			})
+			.await
+			.ok();
+
+		let server = Arc::new(InMemoryServer {
+			resources: hlist![Arc::new(UserLoginResource::new(
+				sessions.clone(),
+				users.clone()
+			))],
+		});
+
+		let (user_login_resource, _) =
+			server.get_server_resources().pluck();
+
+		let fetched_secret =
+			user_login_resource.get_secret(&id).await.unwrap();
+
+		assert_eq!(fetched_secret, secret);
 	}
 
 	#[tokio::test]
