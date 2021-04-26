@@ -24,7 +24,7 @@ pub fn protobuf_body<
 	async fn from_bytes<
 		T: schema::Message + Send + Default + DeserializeOwned,
 	>(
-		mut buf: impl Buf,
+		mut buf: impl Buf + Send,
 		content_type: Option<String>,
 	) -> Result<T, Rejection> {
 		let bytes = buf.copy_to_bytes(buf.remaining());
@@ -45,7 +45,7 @@ pub fn protobuf_body<
 				ProtobufDeseralizeError { cause: err.into() }
 			}),
 		}
-		.map_err(|err| reject::custom(err))
+		.map_err(reject::custom)
 	}
 	aggregate()
 		.and(warp::header::optional("x-content-type"))
