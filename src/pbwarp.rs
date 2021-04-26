@@ -1,6 +1,6 @@
 use crate::schema;
 #[cfg(feature = "json-proto")]
-use serde::de::DeserializeOwned;
+use serde::{de::DeserializeOwned, Serialize};
 use warp::{
 	body::aggregate,
 	http::HeaderValue,
@@ -101,6 +101,7 @@ impl Reply for Protobuf {
 	}
 }
 
+#[cfg(not(feature = "json-proto"))]
 pub fn protobuf_reply<T>(val: &T) -> Protobuf
 where
 	T: schema::Message + Send + Default,
@@ -109,5 +110,27 @@ where
 		inner: val.write_to_bytes().map_err(|err| {
 			tracing::debug!("protobuf reply error: {}", err)
 		}),
+	}
+}
+
+#[cfg(feature = "json-proto")]
+pub fn protobuf_reply<T>(
+	val: &T,
+	content_type: Option<String>,
+) -> Protobuf
+where
+	T: schema::Message + Send + Default + Serialize,
+{
+	Protobuf {
+		inner: match content_type {
+			Some(t) if &t == "application/json" => {
+				serde_json::to_vec(&val).map_err(|err| {
+					tracing::debug!("json reply error: {}", err)
+				})
+			}
+			_ => val.write_to_bytes().map_err(|err| {
+				tracing::debug!("protobuf reply error: {}", err)
+			}),
+		},
 	}
 }

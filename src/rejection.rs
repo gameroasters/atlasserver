@@ -20,7 +20,7 @@ pub async fn handle_rejection(
 			tracing::error!("unhandled rejection {:?}", err);
 
             Ok(warp::reply::with_status(
-                crate::pbwarp::protobuf_reply(&RejectionResponse::default()),
+                crate::pbwarp::protobuf_reply(&RejectionResponse::default(), None),
                 StatusCode::INTERNAL_SERVER_ERROR,
             ))
         },
@@ -37,7 +37,7 @@ pub async fn handle_rejection(
             };
 
             Ok(warp::reply::with_status(
-                crate::pbwarp::protobuf_reply(&rejection),
+                crate::pbwarp::protobuf_reply(&rejection, None),
                 StatusCode::ACCEPTED,
             ))
         },
