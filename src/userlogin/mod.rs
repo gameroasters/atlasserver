@@ -17,6 +17,7 @@ use warp::{filters::BoxedFilter, Filter, Rejection, Reply};
 
 //TODO: make configurable from using crate
 pub const MIN_CLIENT_VERSION: u32 = 1;
+//TODO: this shouldn't be defined here
 pub const HEADER_SESSION: &str = "X-GR-Session";
 
 pub struct UserLogin {}
@@ -203,6 +204,8 @@ impl CustomModule for UserLogin {
 				resource
 			}))
 			.and_then(register_filter_fn);
+		// .with(warp::wrap_fn(|a| a));
+		// .with(warp::wrap_fn(pbwarp::wrapper)); //wrap_fn requires the error to be infallible
 
 		let login_filter = warp::path!("user" / "login")
 			.and(warp::post())
@@ -619,10 +622,12 @@ mod tests {
 			.body(
 				r#"
                 {
+					"clientLanguage": "en-CA",
                     "clientVersion": 1000000
                 }
             "#,
 			)
+			.header("x-content-type", "application/json")
 			.path("/user/register")
 			.reply(&filter)
 			.await;

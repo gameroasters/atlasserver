@@ -25,29 +25,31 @@ pub fn protobuf_body<
 		T: schema::Message + Send + Default + DeserializeOwned,
 	>(
 		mut buf: impl Buf,
+		content_type: Option<String>,
 	) -> Result<T, Rejection> {
 		let bytes = buf.copy_to_bytes(buf.remaining());
 
-		match T::parse_from_bytes(&bytes) {
-			Ok(res) => Ok(res),
-			Err(err) => {
-				log::debug!("json fallback due to request protobuf body error: {}", err);
-
+		match content_type {
+			Some(h) if &h == "application/json" => {
 				serde_json::from_slice(&bytes.to_vec()).map_err(
 					|err| {
-						log::debug!(
+						tracing::debug!(
 							"json request protobuf body error: {}",
 							err
 						);
-						reject::custom(ProtobufDeseralizeError {
-							cause: err.into(),
-						})
+						ProtobufDeseralizeError { cause: err.into() }
 					},
 				)
 			}
+			_ => T::parse_from_bytes(&bytes).map_err(|err| {
+				ProtobufDeseralizeError { cause: err.into() }
+			}),
 		}
+		.map_err(|err| reject::custom(err))
 	}
-	aggregate().and_then(from_bytes)
+	aggregate()
+		.and(warp::header::optional("x-content-type"))
+		.and_then(from_bytes)
 }
 
 #[cfg(not(feature = "json-proto"))]
