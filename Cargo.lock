@@ -704,9 +704,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.93"
+version = "0.2.94"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9385f66bf6105b241aa65a61cb923ef20efc665cb9f9bb50ac2f0c4b7f378d41"
+checksum = "18794a8ad5b29321f790b55d93dfba91e125cb1a9edbd4f8e3150acc771c1a5e"
 
 [[package]]
 name = "log"
@@ -992,9 +992,9 @@ dependencies = [
 
 [[package]]
 name = "protobuf"
-version = "2.22.1"
+version = "2.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1b7f4a129bb3754c25a4e04032a90173c68f85168f77118ac4cb4936e7f06f92"
+checksum = "73f72884896d22e0da0e5b266cb9a780b791f6c3b2f5beab6368d6cd4f0dbb86"
 dependencies = [
  "serde",
  "serde_derive",
@@ -1002,18 +1002,18 @@ dependencies = [
 
 [[package]]
 name = "protobuf-codegen"
-version = "2.22.1"
+version = "2.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e5d2fa3a461857508103b914da60dd7b489c1a834967c2e214ecc1496f0c486a"
+checksum = "e8217a1652dbc91d19c509c558234145faed729191a966896414e5889f62d543"
 dependencies = [
  "protobuf",
 ]
 
 [[package]]
 name = "protobuf-codegen-pure"
-version = "2.22.1"
+version = "2.22.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3a2520307dbb0df861ed77603770dc23b0ec15e5048272416d6447de98e862b"
+checksum = "1f239d71417bdc5f8d83c07aeb265f911346e5540a1a6c4285f9c3d1966ed6e3"
 dependencies = [
  "protobuf",
  "protobuf-codegen",
@@ -1145,9 +1145,9 @@ dependencies = [
 
 [[package]]
 name = "regex"
-version = "1.4.5"
+version = "1.4.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "957056ecddbeba1b26965114e191d2e8589ce74db242b6ea25fc4062427a5c19"
+checksum = "2a26af418b574bd56588335b3a3659a65725d4e636eb1016c2f9e3b38c7cc759"
 dependencies = [
  "aho-corasick",
  "memchr",
