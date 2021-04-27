@@ -17,7 +17,9 @@ use warp::{filters::BoxedFilter, Filter, Rejection, Reply};
 
 //TODO: make configurable from using crate
 pub const MIN_CLIENT_VERSION: u32 = 1;
+//TODO: this shouldn't be defined here
 pub const HEADER_SESSION: &str = "X-GR-Session";
+pub const CONTENT_TYPE: &str = "x-content-type";
 
 pub struct UserLogin {}
 
@@ -202,7 +204,10 @@ impl CustomModule for UserLogin {
 					server2.get_server_resources().pluck();
 				resource
 			}))
+			.and(warp::header::optional::<String>(CONTENT_TYPE))
 			.and_then(register_filter_fn);
+		// .with(warp::wrap_fn(|a| a));
+		// .with(warp::wrap_fn(pbwarp::wrapper)); //wrap_fn requires the error to be infallible
 
 		let login_filter = warp::path!("user" / "login")
 			.and(warp::post())
@@ -214,6 +219,7 @@ impl CustomModule for UserLogin {
 					server.clone().get_server_resources().pluck();
 				resource
 			}))
+			.and(warp::header::optional::<String>(CONTENT_TYPE))
 			.and_then(login_filter_fn);
 
 		let filters: BoxedFilter<(Box<dyn Reply>,)> = login_filter
@@ -230,6 +236,7 @@ async fn login_filter_fn(
 	addr: Option<SocketAddr>,
 	request: schema::LoginRequest,
 	user_login_resource: Arc<UserLoginResource>,
+	content_type: Option<String>,
 ) -> Result<impl warp::Reply, Rejection> {
 	let ip = forward_header
 		.clone()
@@ -237,7 +244,8 @@ async fn login_filter_fn(
 
 	match user_login_resource.user_login(request, ip).await {
 		Ok((response, session_id)) => {
-			let reply = pbwarp::protobuf_reply(&response);
+			let reply =
+				pbwarp::protobuf_reply(&response, content_type);
 
 			return Ok(warp::reply::with_header(
 				warp::reply::with_header(
@@ -264,6 +272,7 @@ async fn register_filter_fn(
 	addr: Option<SocketAddr>,
 	register_request: schema::RegisterRequest,
 	user_login_resource: Arc<UserLoginResource>,
+	content_type: Option<String>,
 ) -> Result<impl warp::Reply, Rejection> {
 	let ip = forward_header
 		.clone()
@@ -278,7 +287,8 @@ async fn register_filter_fn(
 		.await
 	{
 		Ok((response, session_id)) => {
-			let reply = pbwarp::protobuf_reply(&response);
+			let reply =
+				pbwarp::protobuf_reply(&response, content_type);
 
 			return Ok(warp::reply::with_header(
 				warp::reply::with_header(
@@ -334,7 +344,7 @@ pub const fn is_valid_version(client_version: u32) -> bool {
 mod tests {
 	use crate::{
 		rejection::{self, handle_rejection},
-		schema,
+		schema::{self, RegisterResponse},
 		userlogin::{
 			session_filter,
 			sessions::{InMemorySessionDB, Session, SessionDB},
@@ -619,10 +629,12 @@ mod tests {
 			.body(
 				r#"
                 {
+					"clientLanguage": "en-CA",
                     "clientVersion": 1000000
                 }
             "#,
 			)
+			.header("x-content-type", "application/json")
 			.path("/user/register")
 			.reply(&filter)
 			.await;
@@ -633,9 +645,8 @@ mod tests {
 			String::default()
 		);
 
-		let _request =
-			schema::RegisterResponse::parse_from_bytes(reply.body())
-				.unwrap();
+		let _request: RegisterResponse =
+			serde_json::from_slice(&reply.body()).unwrap();
 	}
 
 	#[tokio::test]

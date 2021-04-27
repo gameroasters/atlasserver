@@ -24,12 +24,15 @@
 // const _PROTOBUF_VERSION_CHECK: () = ::protobuf::VERSION_2_22_1;
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct RegisterRequest {
     // message fields
     pub clientVersion: u32,
     pub clientLanguage: ::std::string::String,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -218,13 +221,16 @@ impl ::protobuf::reflect::ProtobufValue for RegisterRequest {
 }
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct LoginRequest {
     // message fields
     pub user: ::protobuf::SingularPtrField<UserCredentials>,
     pub clientVersion: u32,
     pub clientLanguage: ::std::string::String,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -469,11 +475,14 @@ impl ::protobuf::reflect::ProtobufValue for LoginRequest {
 }
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct LoginResponse {
     // message fields
     pub isOutdated: bool,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -621,12 +630,15 @@ impl ::protobuf::reflect::ProtobufValue for LoginResponse {
 }
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct UserCredentials {
     // message fields
     pub id: ::std::string::String,
     pub secret: ::std::string::String,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -822,12 +834,15 @@ impl ::protobuf::reflect::ProtobufValue for UserCredentials {
 }
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct RegisterResponse {
     // message fields
     pub user: ::protobuf::SingularPtrField<UserCredentials>,
     pub isOutdated: bool,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -1031,11 +1046,14 @@ impl ::protobuf::reflect::ProtobufValue for RegisterResponse {
 }
 
 #[derive(PartialEq,Clone,Default)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub struct RejectionResponse {
     // message fields
     pub sessionFilterRejection: RejectionResponse_SessionFilterRejection,
     // special fields
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub unknown_fields: ::protobuf::UnknownFields,
+    #[cfg_attr(feature = "with-serde", serde(skip))]
     pub cached_size: ::protobuf::CachedSize,
 }
 
@@ -1179,6 +1197,7 @@ impl ::protobuf::reflect::ProtobufValue for RejectionResponse {
 }
 
 #[derive(Clone,PartialEq,Eq,Debug,Hash)]
+#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
 pub enum RejectionResponse_SessionFilterRejection {
     NONE = 0,
     INVALID = 1,
@@ -1232,21 +1251,22 @@ impl ::protobuf::reflect::ProtobufValue for RejectionResponse_SessionFilterRejec
 }
 
 static file_descriptor_proto_data: &'static [u8] = b"\
-    \n\x0cschema.proto\"e\n\x0fRegisterRequest\x12&\n\rclientVersion\x18\x01\
-    \x20\x01(\rR\rclientVersionB\0\x12(\n\x0eclientLanguage\x18\x02\x20\x01(\
-    \tR\x0eclientLanguageB\0:\0\"\x8a\x01\n\x0cLoginRequest\x12&\n\x04user\
-    \x18\x01\x20\x01(\x0b2\x10.UserCredentialsR\x04userB\0\x12&\n\rclientVer\
-    sion\x18\x02\x20\x01(\rR\rclientVersionB\0\x12(\n\x0eclientLanguage\x18\
-    \x03\x20\x01(\tR\x0eclientLanguageB\0:\0\"3\n\rLoginResponse\x12\x20\n\n\
-    isOutdated\x18\x01\x20\x01(\x08R\nisOutdatedB\0:\0\"?\n\x0fUserCredentia\
-    ls\x12\x10\n\x02id\x18\x01\x20\x01(\tR\x02idB\0\x12\x18\n\x06secret\x18\
-    \x02\x20\x01(\tR\x06secretB\0:\0\"^\n\x10RegisterResponse\x12&\n\x04user\
-    \x18\x01\x20\x01(\x0b2\x10.UserCredentialsR\x04userB\0\x12\x20\n\nisOutd\
-    ated\x18\x02\x20\x01(\x08R\nisOutdatedB\0:\0\"\xc4\x01\n\x11RejectionRes\
-    ponse\x12c\n\x16sessionFilterRejection\x18\x01\x20\x01(\x0e2).RejectionR\
-    esponse.SessionFilterRejectionR\x16sessionFilterRejectionB\0\"H\n\x16Ses\
-    sionFilterRejection\x12\x08\n\x04NONE\x10\0\x12\x0b\n\x07INVALID\x10\x01\
-    \x12\x15\n\x11SESSION_NOT_FOUND\x10\x02\x1a\0:\0B\0b\x06proto3\
+    \n\x0cschema.proto\x1a\x0frustproto.proto\"e\n\x0fRegisterRequest\x12&\n\
+    \rclientVersion\x18\x01\x20\x01(\rR\rclientVersionB\0\x12(\n\x0eclientLa\
+    nguage\x18\x02\x20\x01(\tR\x0eclientLanguageB\0:\0\"\x8a\x01\n\x0cLoginR\
+    equest\x12&\n\x04user\x18\x01\x20\x01(\x0b2\x10.UserCredentialsR\x04user\
+    B\0\x12&\n\rclientVersion\x18\x02\x20\x01(\rR\rclientVersionB\0\x12(\n\
+    \x0eclientLanguage\x18\x03\x20\x01(\tR\x0eclientLanguageB\0:\0\"3\n\rLog\
+    inResponse\x12\x20\n\nisOutdated\x18\x01\x20\x01(\x08R\nisOutdatedB\0:\0\
+    \"?\n\x0fUserCredentials\x12\x10\n\x02id\x18\x01\x20\x01(\tR\x02idB\0\
+    \x12\x18\n\x06secret\x18\x02\x20\x01(\tR\x06secretB\0:\0\"^\n\x10Registe\
+    rResponse\x12&\n\x04user\x18\x01\x20\x01(\x0b2\x10.UserCredentialsR\x04u\
+    serB\0\x12\x20\n\nisOutdated\x18\x02\x20\x01(\x08R\nisOutdatedB\0:\0\"\
+    \xc4\x01\n\x11RejectionResponse\x12c\n\x16sessionFilterRejection\x18\x01\
+    \x20\x01(\x0e2).RejectionResponse.SessionFilterRejectionR\x16sessionFilt\
+    erRejectionB\0\"H\n\x16SessionFilterRejection\x12\x08\n\x04NONE\x10\0\
+    \x12\x0b\n\x07INVALID\x10\x01\x12\x15\n\x11SESSION_NOT_FOUND\x10\x02\x1a\
+    \0:\0B\x04\xb0\xa8\x08\x01b\x06proto3\
 ";
 
 static file_descriptor_proto_lazy: ::protobuf::rt::LazyV2<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::rt::LazyV2::INIT;

@@ -1,0 +1,3 @@
+import "rustproto.proto";
+
+option (rustproto.serde_derive_all) = true;
