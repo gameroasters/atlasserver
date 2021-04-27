@@ -20,6 +20,7 @@ pub mod userlogin;
 
 use async_trait::async_trait;
 use frunk::hlist::HList;
+pub use frunk::{hlist, Hlist};
 use std::{net::SocketAddr, sync::Arc};
 use tracing::Span;
 use warp::{
