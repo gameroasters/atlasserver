@@ -1,10 +1,4 @@
-//TODO: remove these top lines, have a header programatically add these import and options in build.rs
-
 syntax = "proto3";
-import "rustproto.proto";
-
-option (rustproto.serde_derive_all) = true;
-option csharp_namespace = "GR.S4.Controller.Backend";
 
 message RegisterRequest { 
   uint32 clientVersion = 1;
