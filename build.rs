@@ -17,7 +17,7 @@ fn main() {
 
 	//TODO: abstract this header insertion
 	schema_file
-		.write(
+		.write_all(
 			(lines
 				.next()
 				.expect("failed to get first line from schema")
@@ -32,13 +32,13 @@ fn main() {
 		let header = std::fs::read("proto/header.proto")
 			.expect("failed to read header");
 		schema_file
-			.write(&header)
+			.write_all(&header)
 			.expect("failed to write header to schema file");
 	}
 
 	lines.for_each(|line| {
 		schema_file
-			.write(
+			.write_all(
 				(line.expect("failed to read line") + "\n")
 					.as_bytes(),
 			)
