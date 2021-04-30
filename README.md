@@ -1,4 +1,9 @@
-![Build](https://github.com/gameroasters/atlas/workflows/CI/badge.svg)
+[![crates][s1]][l1]
+![ci][s2]
+
+[s1]: https://img.shields.io/crates/v/atlasserver.svg
+[l1]: https://crates.io/crates/atlasserver
+[s2]: https://github.com/gameroasters/atlas/workflows/CI/badge.svg
 
 # atlas
 
