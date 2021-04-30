@@ -7,7 +7,7 @@ authors = [
 edition = "2018"
 license = "LICENSE"
 readme = "README.md"
-descriptions = "Atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind."
+description = "Atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind."
 repository = "https://github.com/gameroasters/atlas"
 homepage = "https://github.com/gameroasters/atlas"
 
@@ -35,7 +35,6 @@ with-serde = []
 anyhow = "1.0"
 async-trait = "0.1"
 chrono = "0.4"
-iap = "0.2"
 mockito = "0.30"
 serde = { version = "1.0", features = ["derive"]}
 
