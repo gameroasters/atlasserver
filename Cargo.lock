@@ -12,7 +12,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "atlas"
+name = "atlasserver"
 version = "0.1.0"
 dependencies = [
  "async-trait",

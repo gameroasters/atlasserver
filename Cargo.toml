@@ -1,5 +1,5 @@
 [package]
-name = "atlas"
+name = "atlasserver"
 version = "0.1.0"
 authors = [
     "Stephan Dilly <dilly.stephan@gmail.com>",

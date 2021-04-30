@@ -2,7 +2,7 @@
 
 # atlas
 
-atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind.
+`atlasserver` is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind.
 
 ## How it works
 
