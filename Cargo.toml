@@ -6,7 +6,10 @@ authors = [
     "lyon <lyonbeckers@gmail.com>"]
 edition = "2018"
 license = "LICENSE"
+readme = "README.md"
 descriptions = "Atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind."
+repository = "https://github.com/gameroasters/atlas"
+homepage = "https://github.com/gameroasters/atlas"
 
 [dependencies]
 async-trait = "0.1"
