@@ -5,6 +5,8 @@ authors = [
     "Stephan Dilly <dilly.stephan@gmail.com>",
     "lyon <lyonbeckers@gmail.com>"]
 edition = "2018"
+license = "LICENSE"
+descriptions = "Atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind."
 
 [dependencies]
 async-trait = "0.1"
