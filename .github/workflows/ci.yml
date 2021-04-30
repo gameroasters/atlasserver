@@ -52,9 +52,12 @@ jobs:
     - name: build
       run: cargo build
 
+    - name: build examples
+      run: cargo b --example custom_server
+
     - name: clippy
       run: |
-        cargo clean -p atlas
+        cargo clean -p atlasserver
         cargo clippy
 
     - name: tests

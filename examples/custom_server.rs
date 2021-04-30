@@ -1,6 +1,6 @@
 use std::sync::Arc;
 
-use atlas::*;
+use atlasserver::*;
 
 struct MyServer {
 	resources: <Self as CustomServer>::Resources,
@@ -42,7 +42,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 		),],
 	});
 
-	atlas::initialize_server(server, ([0, 0, 0, 0], 8080)).await;
+	atlasserver::initialize_server(server, ([0, 0, 0, 0], 8080))
+		.await;
 
 	Ok(())
 }
