@@ -123,14 +123,16 @@ impl From<User> for DynamoHashMap {
 					..AttributeValue::default()
 				},
 			);
-		}
-		map.insert(
-			"language".to_string(),
-			AttributeValue {
-				s: Some(v.language),
-				..AttributeValue::default()
-			},
-		);
+		};
+		if let Some(language) = v.language {
+			map.insert(
+				"language".to_string(),
+				AttributeValue {
+					s: Some(language),
+					..AttributeValue::default()
+				},
+			);
+		};
 
 		map
 	}
@@ -163,8 +165,7 @@ impl TryFrom<HashMap<String, AttributeValue>> for User {
 				.and_then(|attr| attr.s.clone()),
 			language: attributes
 				.get("language")
-				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserializeError("language"))?,
+				.and_then(|attr| attr.s.clone()),
 		})
 	}
 }
