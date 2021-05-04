@@ -106,7 +106,8 @@ impl UserLoginResource {
 				//TODO: add last_login to User, update last login here
 
 				user.country = self.country_from_ip(ip).await;
-				user.language = login_request.clientLanguage;
+				user.language =
+					string_to_option(login_request.clientLanguage);
 
 				user.version += 1;
 				if self.users.save_user(&user).await.is_err() {
@@ -153,6 +154,7 @@ impl UserLoginResource {
 		}
 
 		let country = self.country_from_ip(ip).await;
+		let client_language = string_to_option(client_language);
 
 		let mut new_user = User::new(country, client_language);
 		let session = self
@@ -338,6 +340,14 @@ pub fn session_filter(
 #[must_use]
 pub const fn is_valid_version(client_version: u32) -> bool {
 	client_version >= MIN_CLIENT_VERSION
+}
+
+fn string_to_option(string: String) -> Option<String> {
+	if string.is_empty() {
+		None
+	} else {
+		Some(string)
+	}
 }
 
 #[cfg(test)]
@@ -675,7 +685,7 @@ mod tests {
 
 		let db_user = users.clone().get_user(&user.id).await.unwrap();
 		assert_eq!(db_user.id, user.id);
-		assert_eq!(db_user.language, "en-CA");
+		assert_eq!(db_user.language, Some("en-CA".to_string()));
 		assert_eq!(db_user.session, Some(session.clone()));
 		assert_eq!(db_user.secret, user.secret);
 		assert_eq!(
@@ -735,7 +745,7 @@ mod tests {
 		let db_session = sessions.get(&session).await.unwrap();
 		let db_user =
 			users.get_user(&db_session.user_id).await.unwrap();
-		assert_eq!(db_user.language, "en-CA");
+		assert_eq!(db_user.language, Some("en-CA".to_string()));
 		assert_eq!(db_user.session, Some(session.clone()));
 	}
 

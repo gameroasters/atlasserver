@@ -15,12 +15,15 @@ pub struct User {
 	pub version: u64,
 	pub session: Option<String>,
 	pub country: Option<String>,
-	pub language: String,
+	pub language: Option<String>,
 }
 
 impl User {
 	#[must_use]
-	pub fn new(country: Option<String>, language: String) -> Self {
+	pub fn new(
+		country: Option<String>,
+		language: Option<String>,
+	) -> Self {
 		Self {
 			id: Uuid::new_v4().to_string(),
 			secret: Uuid::new_v4().to_string(),
