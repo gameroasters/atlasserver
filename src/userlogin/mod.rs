@@ -222,33 +222,27 @@ impl CustomModule for UserLogin {
 	fn create_filter<S: ModuleResources<Self>>(
 		server: std::sync::Arc<S>,
 	) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
-		let server2 = server.clone();
+		let userlogin = warp::any().map(move || {
+			let (resource, _) =
+				server.clone().get_server_resources().pluck();
+			resource
+		});
 
 		let register_filter = warp::path!("user" / "register")
 			.and(warp::post())
 			.and(warp::header::optional::<String>("X-Forwarded-For"))
 			.and(warp::addr::remote())
 			.and(pbwarp::protobuf_body::<schema::RegisterRequest>())
-			.and(warp::any().map(move || {
-				let (resource, _) =
-					server2.get_server_resources().pluck();
-				resource
-			}))
+			.and(userlogin.clone())
 			.and(warp::header::optional::<String>(CONTENT_TYPE))
 			.and_then(register_filter_fn);
-		// .with(warp::wrap_fn(|a| a));
-		// .with(warp::wrap_fn(pbwarp::wrapper)); //wrap_fn requires the error to be infallible
 
 		let login_filter = warp::path!("user" / "login")
 			.and(warp::post())
 			.and(warp::header::optional::<String>("X-Forwarded-For"))
 			.and(warp::addr::remote())
 			.and(pbwarp::protobuf_body::<schema::LoginRequest>())
-			.and(warp::any().map(move || {
-				let (resource, _) =
-					server.clone().get_server_resources().pluck();
-				resource
-			}))
+			.and(userlogin)
 			.and(warp::header::optional::<String>(CONTENT_TYPE))
 			.and_then(login_filter_fn);
 
