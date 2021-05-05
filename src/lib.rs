@@ -85,6 +85,7 @@ pub async fn initialize_server<S: CustomServer>(
 	server: Arc<S>,
 	addr: impl Into<SocketAddr> + Send,
 ) {
+	//TODO: make this configurable
 	let cors = warp::cors()
 		.allow_any_origin()
 		.allow_methods(vec!["GET", "POST"]);
