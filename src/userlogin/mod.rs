@@ -21,6 +21,19 @@ pub const MIN_CLIENT_VERSION: u32 = 1;
 pub const HEADER_SESSION: &str = "X-GR-Session";
 pub const CONTENT_TYPE: &str = "x-content-type";
 
+//TODO: use everywhere
+pub type UserId = String;
+
+/// session validation responses
+pub enum SessionValidationResult {
+	/// returns `user_id` belonging to the session
+	Ok { user_id: UserId },
+	/// session is known but was supercedet
+	Invalid,
+	/// unknown or timedout session
+	Unknown,
+}
+
 pub struct UserLogin {}
 
 #[async_trait]
@@ -58,6 +71,21 @@ impl UserLoginResource {
 	///
 	pub fn set_ip_db(&mut self, ipdb: IpDB) {
 		self.ipdb = Some(ipdb);
+	}
+
+	pub async fn validate_session(
+		&self,
+		session: &str,
+	) -> SessionValidationResult {
+		match self.sessions.get(session).await {
+			Some(session) if session.valid => {
+				SessionValidationResult::Ok {
+					user_id: session.user_id,
+				}
+			}
+			Some(_) => SessionValidationResult::Invalid,
+			None => SessionValidationResult::Unknown,
+		}
 	}
 
 	async fn country_from_ip(
@@ -320,14 +348,14 @@ pub fn session_filter(
 		resource: Arc<UserLoginResource>,
 		session: String,
 	) -> Result<String, Rejection> {
-		match resource.sessions.get(&session).await {
-			Some(session) if session.valid => Ok(session.user_id),
-			Some(_) => {
+		match resource.validate_session(&session).await {
+			SessionValidationResult::Ok { user_id } => Ok(user_id),
+			SessionValidationResult::Invalid => {
 				Err(warp::reject::custom(SessionFailure::Invalid))
 			}
-			None => Err(warp::reject::custom(
-				SessionFailure::SessionNotFound,
-			)),
+			SessionValidationResult::Unknown => Err(
+				warp::reject::custom(SessionFailure::SessionNotFound),
+			),
 		}
 	}
 
