@@ -15,7 +15,7 @@ use std::{
 };
 use tracing::instrument;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Clone)]
 struct DynamoSession {
 	id: String,
 	user_id: String,
@@ -112,12 +112,10 @@ impl From<DynamoSession> for DynamoHashMap {
 	}
 }
 
-impl TryFrom<HashMap<String, AttributeValue>> for DynamoSession {
+impl TryFrom<DynamoHashMap> for DynamoSession {
 	type Error = crate::error::Error;
 
-	fn try_from(
-		attributes: HashMap<String, AttributeValue>,
-	) -> Result<Self> {
+	fn try_from(attributes: DynamoHashMap) -> Result<Self> {
 		Ok(Self {
 			id: attributes
 				.get(&"id".to_string())
@@ -250,5 +248,26 @@ impl SessionDB for DynamoSessionDB {
 		}
 
 		Some(item.into())
+	}
+}
+
+#[cfg(test)]
+mod test {
+	use super::*;
+
+	#[test]
+	fn test_serialize() {
+		let s = DynamoSession {
+			id: String::from("sid"),
+			user_id: String::from("uid"),
+			valid: false,
+			ttl: 0,
+		};
+
+		let map: DynamoHashMap = s.clone().try_into().unwrap();
+
+		let s2: DynamoSession = dbg!(map).try_into().unwrap();
+
+		assert_eq!(s, s2);
 	}
 }
