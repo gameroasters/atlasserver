@@ -165,7 +165,7 @@ impl SessionDB for DynamoSessionDB {
 
 	#[instrument(skip(self))]
 	async fn invalidate(&self, key: &str) {
-		tracing::trace!("SessionDB::invalidate");
+		tracing::debug!("SessionDB::invalidate");
 
 		let mut value_map = HashMap::new();
 		value_map.insert(
@@ -180,6 +180,9 @@ impl SessionDB for DynamoSessionDB {
 			table_name: self.table.clone(),
 			key: db_key("id", key),
 			update_expression: Some(String::from("SET valid = :val")),
+			condition_expression: Some(String::from(
+				"attribute_exists(id)",
+			)),
 			expression_attribute_values: Some(value_map),
 			..UpdateItemInput::default()
 		};
@@ -218,7 +221,7 @@ impl SessionDB for DynamoSessionDB {
 			table_name: self.table.clone(),
 			key: db_key("id", key),
 			condition_expression: Some(String::from(
-				"valid = :valid",
+				"valid = :valid and attribute_exists(id)",
 			)),
 			update_expression: Some(String::from("SET #ttl = :ttl")),
 			return_values: Some(String::from("ALL_NEW")),
