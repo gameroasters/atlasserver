@@ -30,6 +30,6 @@ impl Session {
 #[async_trait]
 pub trait SessionDB: Send + Sync {
 	async fn create(&self, session: Session) -> Result<String>;
-	async fn invalidate(&self, key: &str);
+	async fn invalidate(&self, key: &str) -> Option<()>;
 	async fn get(&self, key: &str) -> Option<Session>;
 }

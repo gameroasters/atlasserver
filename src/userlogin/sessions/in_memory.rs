@@ -15,12 +15,12 @@ impl SessionDB for InMemorySessionDB {
 		self.db.lock().await.get(&key.to_string()).cloned()
 	}
 
-	async fn invalidate(&self, key: &str) {
-		if let Some(session) =
-			self.db.lock().await.get_mut(&key.to_string())
-		{
-			session.valid = false;
-		}
+	async fn invalidate(&self, key: &str) -> Option<()> {
+		self.db.lock().await.get_mut(&key.to_string()).map(
+			|session| {
+				session.valid = false;
+			},
+		)
 	}
 
 	async fn create(&self, session: Session) -> Result<String> {
