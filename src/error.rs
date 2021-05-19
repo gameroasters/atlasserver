@@ -35,7 +35,7 @@ pub enum Error {
 	DynamoDeserializeError(&'static str),
 
 	#[error("custom error: {0}")]
-	Custom(&'static str),
+	Custom(String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;
