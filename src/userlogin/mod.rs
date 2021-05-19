@@ -38,8 +38,14 @@ pub struct UserLogin {}
 
 #[async_trait]
 pub trait UserLoginEvents: Send + Sync {
-	async fn on_login(&self, _user: &User);
-	async fn on_register(&self, _user: &User);
+	async fn on_login(
+		&self,
+		_user: &User,
+	) -> Result<(), error::Error>;
+	async fn on_register(
+		&self,
+		_user: &User,
+	) -> Result<(), error::Error>;
 }
 
 pub struct UserLoginResource {
@@ -143,7 +149,7 @@ impl UserLoginResource {
 				}
 
 				if let Some(events) = self.events.as_ref() {
-					events.on_login(&user).await;
+					events.on_login(&user).await?;
 				}
 
 				tracing::info!("user succesfully logged in");
@@ -195,7 +201,7 @@ impl UserLoginResource {
 		self.users.save_user(&new_user).await?;
 
 		if let Some(events) = self.events.as_ref() {
-			events.on_register(&new_user).await;
+			events.on_register(&new_user).await?;
 		}
 
 		tracing::info!("registered user: {}", &new_user.id);
