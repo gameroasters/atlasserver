@@ -1,3 +1,5 @@
+#![allow(clippy::unused_async)]
+
 use crate::schema;
 #[cfg(feature = "json-proto")]
 use serde::{de::DeserializeOwned, Serialize};
