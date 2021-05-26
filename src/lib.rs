@@ -16,6 +16,7 @@ pub mod error;
 pub mod pbwarp;
 pub mod rejection;
 pub mod schema;
+pub mod status;
 pub mod userlogin;
 
 use async_trait::async_trait;
