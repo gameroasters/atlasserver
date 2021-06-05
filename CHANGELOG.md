@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.1] - 2021-06-05
+
 ## Fixes
 - logout of a previous session was not working correctly [d385b98]
 
