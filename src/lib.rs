@@ -121,6 +121,6 @@ pub async fn initialize_server<S: CustomServer>(
 			// TODO: make this modular
 			.recover(rejection::handle_rejection);
 
-		warp::serve(routes).run(addr).await
+		warp::serve(routes).run(addr).await;
 	}
 }

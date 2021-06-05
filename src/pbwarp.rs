@@ -127,11 +127,11 @@ where
 		inner: match content_type {
 			Some(t) if &t == "application/json" => {
 				serde_json::to_vec(&val).map_err(|err| {
-					tracing::debug!("json reply error: {}", err)
+					tracing::debug!("json reply error: {}", err);
 				})
 			}
 			_ => val.write_to_bytes().map_err(|err| {
-				tracing::debug!("protobuf reply error: {}", err)
+				tracing::debug!("protobuf reply error: {}", err);
 			}),
 		},
 	}

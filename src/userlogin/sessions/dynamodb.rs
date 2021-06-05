@@ -120,21 +120,21 @@ impl TryFrom<DynamoHashMap> for DynamoSession {
 			id: attributes
 				.get(&"id".to_string())
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserializeError("id"))?,
+				.ok_or(Error::DynamoDeserialize("id"))?,
 			user_id: attributes
 				.get(&"user_id".to_string())
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserializeError("user_id"))?,
+				.ok_or(Error::DynamoDeserialize("user_id"))?,
 			valid: attributes
 				.get(&"valid".to_string())
 				.and_then(|attr| attr.s.as_ref())
 				.and_then(|attr| attr.parse::<bool>().ok())
-				.ok_or(Error::DynamoDeserializeError("valid"))?,
+				.ok_or(Error::DynamoDeserialize("valid"))?,
 			ttl: attributes
 				.get(&"ttl".to_string())
 				.and_then(|attr| attr.n.as_ref())
 				.and_then(|attr| attr.parse::<i64>().ok())
-				.ok_or(Error::DynamoDeserializeError("ttl"))?,
+				.ok_or(Error::DynamoDeserialize("ttl"))?,
 		})
 	}
 }

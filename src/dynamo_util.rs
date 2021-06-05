@@ -52,7 +52,7 @@ where
 
 	if !table_exists {
 		if !is_local_setup() {
-			return Err(Error::TableNotFoundError(table.to_string()));
+			return Err(Error::TableNotFound(table.to_string()));
 		}
 
 		tracing::info!("create table: {}", table);

@@ -145,7 +145,7 @@ impl UserLoginResource {
 
 				user.version += 1;
 				if self.users.save_user(&user).await.is_err() {
-					tracing::error!("user save error")
+					tracing::error!("user save error");
 				}
 
 				if let Some(events) = self.events.as_ref() {
@@ -164,7 +164,7 @@ impl UserLoginResource {
 			}
 		}
 
-		Err(error::Error::IoError(std::io::Error::new(
+		Err(error::Error::Io(std::io::Error::new(
 			std::io::ErrorKind::NotFound,
 			"failed to retrieve user",
 		)))

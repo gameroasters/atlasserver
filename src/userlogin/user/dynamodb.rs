@@ -147,16 +147,16 @@ impl TryFrom<HashMap<String, AttributeValue>> for User {
 			id: attributes
 				.get("id")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserializeError("id"))?,
+				.ok_or(Error::DynamoDeserialize("id"))?,
 			version: attributes
 				.get("version")
 				.and_then(|attr| attr.n.as_ref())
 				.and_then(|n| n.parse::<u64>().ok())
-				.ok_or(Error::DynamoDeserializeError("version"))?,
+				.ok_or(Error::DynamoDeserialize("version"))?,
 			secret: attributes
 				.get("secret")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserializeError("secret"))?,
+				.ok_or(Error::DynamoDeserialize("secret"))?,
 			session: attributes
 				.get("session")
 				.and_then(|attr| attr.s.clone()),
