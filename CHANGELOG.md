@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## Changed
+- update tokio and change dependency to pin only on `1` since its promised to be a stable API
+  
 ## [0.1.1] - 2021-06-05
 
 ## Fixes

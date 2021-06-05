@@ -13,11 +13,11 @@ homepage = "https://github.com/gameroasters/atlasserver"
 
 [dependencies]
 async-trait = "0.1"
-frunk = "0.3.1"
+frunk = "0.3"
 warp = "0.3"
 tracing = "0.1"
 thiserror = "1.0"
-tokio = { version = "1.1", default-features = false, features = ["macros", "rt-multi-thread"] }
+tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
 rusoto_core = "0.46"
 rusoto_dynamodb = "0.46"
 uuid = { version = "0.8", features = ["v4"] }
