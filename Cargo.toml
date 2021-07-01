@@ -18,8 +18,8 @@ warp = "0.3"
 tracing = "0.1"
 thiserror = "1.0"
 tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
-rusoto_core = "0.46"
-rusoto_dynamodb = "0.46"
+rusoto_core = "0.47"
+rusoto_dynamodb = "0.47"
 uuid = { version = "0.8", features = ["v4"] }
 serde = "1.0"
 chrono = "0.4"
