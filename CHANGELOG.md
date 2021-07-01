@@ -7,8 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.1.2] - 2021-07-01
+
 ## Changed
 - update tokio and change dependency to pin only on `1` since its promised to be a stable API
+- removed Cargo.lock since we are just a library
+- bump `rusoto` to `0.47`
   
 ## [0.1.1] - 2021-06-05
 
