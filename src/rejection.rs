@@ -11,6 +11,7 @@ pub enum SessionFailure {
 impl Reject for SessionFailure {}
 
 #[allow(clippy::missing_errors_doc)]
+//TODO: this a nightly only warning currently
 #[allow(clippy::unused_async)]
 pub async fn handle_rejection(
 	err: Rejection,

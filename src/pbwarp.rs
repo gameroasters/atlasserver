@@ -1,3 +1,4 @@
+//TODO: this a nightly only warning currently
 #![allow(clippy::unused_async)]
 
 use crate::schema;
