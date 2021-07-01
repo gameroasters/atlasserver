@@ -11,7 +11,6 @@ pub enum SessionFailure {
 impl Reject for SessionFailure {}
 
 #[allow(clippy::missing_errors_doc)]
-#[allow(clippy::unused_async)]
 pub async fn handle_rejection(
 	err: Rejection,
 ) -> Result<impl Reply, Infallible> {
