@@ -172,9 +172,6 @@ pub async fn init_with_graceful_shutdown<S: CustomServer>(
 
 		tracing::info!("serverstart: {}", addr);
 
-		// Spawn the server into a runtime
-		tokio::task::spawn(server);
-
-		tracing::info!("serverstarted");
+		server.await;
 	}
 }

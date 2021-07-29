@@ -31,6 +31,10 @@ impl ModuleResources<userlogin::UserLogin> for MyServer {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+	tracing_subscriber::fmt()
+		.with_max_level(tracing::Level::TRACE)
+		.init();
+
 	let session_db =
 		Arc::new(userlogin::sessions::InMemorySessionDB::default());
 	let user_db = Arc::new(
@@ -45,20 +49,24 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
 	let (sender, receiver) = tokio::sync::oneshot::channel();
 
+	tracing::info!("starting");
+
+	tokio::spawn(async move {
+		tracing::info!("wait 2 secs...");
+
+		sleep(Duration::from_secs(2)).await;
+
+		tracing::info!("shutdown");
+
+		let _ = sender.send(());
+	});
+
 	atlasserver::init_with_graceful_shutdown(
 		server,
 		([0, 0, 0, 0], 8080),
 		receiver,
 	)
 	.await;
-
-	tracing::info!("server started");
-
-	sleep(Duration::from_secs(1)).await;
-
-	tracing::info!("server shutdown");
-
-	let _ = sender.send(());
 
 	Ok(())
 }
