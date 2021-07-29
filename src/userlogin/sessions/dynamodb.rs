@@ -374,8 +374,7 @@ mod test_ddb {
 
 	async fn create_test_ddb_session(
 	) -> (DynamoSessionDB, mockito::Mock) {
-		// enable env logger
-		let _ = env_logger::try_init();
+		tracing_subscriber::fmt().try_init().ok();
 
 		let table_name = "table";
 		let data = object! {

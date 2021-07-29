@@ -31,9 +31,7 @@ impl ModuleResources<userlogin::UserLogin> for MyServer {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-	tracing_subscriber::fmt()
-		.with_max_level(tracing::Level::TRACE)
-		.init();
+	tracing_subscriber::fmt().try_init().ok();
 
 	let session_db =
 		Arc::new(userlogin::sessions::InMemorySessionDB::default());

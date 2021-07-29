@@ -6,6 +6,7 @@ check:
 	cargo clippy
 	cargo t
 	cargo c --example custom_server
+	cargo c --example graceful_shutdown
 
 check-nightly:
 	cargo +nightly c
