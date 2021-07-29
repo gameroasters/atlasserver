@@ -82,7 +82,7 @@ pub fn trace_request() -> Trace<impl Fn(Info) -> Span + Clone> {
 	})
 }
 
-pub async fn initialize_server<S: CustomServer>(
+pub async fn init<S: CustomServer>(
 	server: Arc<S>,
 	addr: impl Into<SocketAddr> + Send,
 ) {
@@ -122,5 +122,59 @@ pub async fn initialize_server<S: CustomServer>(
 			.recover(rejection::handle_rejection);
 
 		warp::serve(routes).run(addr).await;
+	}
+}
+
+pub async fn init_with_graceful_shutdown<S: CustomServer>(
+	server: Arc<S>,
+	addr: impl Into<SocketAddr> + Send,
+	shutdown_receiver: tokio::sync::oneshot::Receiver<()>,
+) {
+	//TODO: make this configurable
+	let cors = warp::cors()
+		.allow_any_origin()
+		.allow_methods(vec!["GET", "POST"]);
+
+	let mut filters = S::MODULES
+		.iter()
+		.map(|module| (module.call)(server.clone()));
+
+	if let Some(first) = filters.next() {
+		let routes = filters.fold(first, |route, next| {
+			route
+				.or(next)
+				.map(|r| -> Box<dyn Reply> { Box::new(r) })
+				.boxed()
+		});
+
+		let log = warp::log::custom(move |info| {
+			tracing::info!(
+				target: "http",
+				path = %info.path(),
+				method = %info.method(),
+				elapsed = %info.elapsed().as_micros(),
+				status = %info.status(),
+				agent = %info.user_agent().unwrap_or_default()
+			);
+		});
+
+		let routes = routes
+			.with(log) // log filter
+			.with(trace_request()) //tracing filter
+			.with(cors)
+			// TODO: make this modular
+			.recover(rejection::handle_rejection);
+
+		let (addr, server) = warp::serve(routes)
+			.bind_with_graceful_shutdown(addr.into(), async {
+				shutdown_receiver.await.ok();
+			});
+
+		tracing::info!("serverstart: {}", addr);
+
+		// Spawn the server into a runtime
+		tokio::task::spawn(server);
+
+		tracing::info!("serverstarted");
 	}
 }

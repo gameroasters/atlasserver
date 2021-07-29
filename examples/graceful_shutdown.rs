@@ -1,6 +1,7 @@
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 
 use atlasserver::*;
+use tokio::time::sleep;
 
 struct MyServer {
 	resources: <Self as CustomServer>::Resources,
@@ -42,7 +43,22 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 		),],
 	});
 
-	atlasserver::init(server, ([0, 0, 0, 0], 8080)).await;
+	let (sender, receiver) = tokio::sync::oneshot::channel();
+
+	atlasserver::init_with_graceful_shutdown(
+		server,
+		([0, 0, 0, 0], 8080),
+		receiver,
+	)
+	.await;
+
+	tracing::info!("server started");
+
+	sleep(Duration::from_secs(1)).await;
+
+	tracing::info!("server shutdown");
+
+	let _ = sender.send(());
 
 	Ok(())
 }

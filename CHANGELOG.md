@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## Changed
+- change main server start method from verbose `atlasserver::initialize_server` to `atlasserver::init`
+
+## Added
+- added `atlasserver::init_with_graceful_shutdown` to start a server that listens for a signal to execute a graceful shutdown (see `graceful_shutdown` example)
+
 ## [0.1.2] - 2021-07-01
 
 ## Changed
