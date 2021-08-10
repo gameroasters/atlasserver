@@ -135,9 +135,10 @@ pub async fn init_with_graceful_shutdown<S: CustomServer>(
 	//TODO: make this configurable
 	let cors = warp::cors()
 		.allow_any_origin()
-		.allow_header(CONTENT_TYPE)
-		.allow_header(HEADER_SESSION)
-		.allow_methods(vec!["GET", "POST"]);
+		.allow_headers([CONTENT_TYPE, HEADER_SESSION])
+		.allow_methods(vec![
+			"GET", "POST", "PUT", "UPDATE", "DELETE",
+		]);
 
 	let mut filters = S::MODULES
 		.iter()

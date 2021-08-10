@@ -651,6 +651,8 @@ mod tests {
 	#[cfg(feature = "json-proto")]
 	#[tokio::test]
 	async fn test_json_request() {
+		use super::CONTENT_TYPE;
+
 		let sessions = Arc::new(InMemorySessionDB::default());
 		let users = Arc::new(InMemoryUserDB::default());
 
