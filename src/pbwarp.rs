@@ -51,7 +51,7 @@ pub fn protobuf_body<
 		.map_err(reject::custom)
 	}
 	aggregate()
-		.and(warp::header::optional("x-content-type"))
+		.and(warp::header::optional(CONTENT_TYPE.as_str()))
 		.and_then(from_bytes)
 }
 

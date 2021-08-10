@@ -19,7 +19,7 @@ use warp::{filters::BoxedFilter, Filter, Rejection, Reply};
 pub const MIN_CLIENT_VERSION: u32 = 1;
 //TODO: this shouldn't be defined here
 pub const HEADER_SESSION: &str = "X-GR-Session";
-pub const CONTENT_TYPE: &str = "x-content-type";
+pub const CONTENT_TYPE: &str = "content-type";
 
 //TODO: use everywhere
 pub type UserId = String;
@@ -672,7 +672,7 @@ mod tests {
                 }
             "#,
 			)
-			.header("x-content-type", "application/json")
+			.header(CONTENT_TYPE, "application/json")
 			.path("/user/register")
 			.reply(&filter)
 			.await;
