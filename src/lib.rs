@@ -19,6 +19,7 @@ pub mod schema;
 pub mod status;
 pub mod userlogin;
 
+use crate::userlogin::HEADER_SESSION;
 use async_trait::async_trait;
 use frunk::hlist::HList;
 pub use frunk::{hlist, Hlist};
@@ -26,12 +27,11 @@ use std::{net::SocketAddr, sync::Arc};
 use tracing::Span;
 use warp::{
 	filters::BoxedFilter,
+	hyper::header::CONTENT_TYPE,
 	reply::Reply,
 	trace::{Info, Trace},
 	Filter,
 };
-
-use crate::userlogin::{CONTENT_TYPE, HEADER_SESSION};
 
 pub struct Module<S>
 where
@@ -135,7 +135,7 @@ pub async fn init_with_graceful_shutdown<S: CustomServer>(
 	//TODO: make this configurable
 	let cors = warp::cors()
 		.allow_any_origin()
-		.allow_headers([CONTENT_TYPE, HEADER_SESSION])
+		.allow_headers([CONTENT_TYPE.as_str(), HEADER_SESSION])
 		.allow_methods(vec![
 			"GET", "POST", "PUT", "UPDATE", "DELETE",
 		]);

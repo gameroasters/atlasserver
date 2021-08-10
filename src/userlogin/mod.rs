@@ -13,13 +13,16 @@ use sessions::Session;
 use std::{net::SocketAddr, sync::Arc};
 use tracing::instrument;
 use user::{User, UserDB};
-use warp::{filters::BoxedFilter, Filter, Rejection, Reply};
+use warp::{
+	filters::BoxedFilter, hyper::header::CONTENT_TYPE, Filter,
+	Rejection, Reply,
+};
 
 //TODO: make configurable from using crate
 pub const MIN_CLIENT_VERSION: u32 = 1;
+
 //TODO: this shouldn't be defined here
 pub const HEADER_SESSION: &str = "X-GR-Session";
-pub const CONTENT_TYPE: &str = "content-type";
 
 //TODO: use everywhere
 pub type UserId = String;
@@ -240,7 +243,9 @@ impl CustomModule for UserLogin {
 			.and(warp::addr::remote())
 			.and(pbwarp::protobuf_body::<schema::RegisterRequest>())
 			.and(userlogin.clone())
-			.and(warp::header::optional::<String>(CONTENT_TYPE))
+			.and(warp::header::optional::<String>(
+				CONTENT_TYPE.as_str(),
+			))
 			.and_then(register_filter_fn);
 
 		let login_filter = warp::path!("user" / "login")
@@ -249,7 +254,9 @@ impl CustomModule for UserLogin {
 			.and(warp::addr::remote())
 			.and(pbwarp::protobuf_body::<schema::LoginRequest>())
 			.and(userlogin)
-			.and(warp::header::optional::<String>(CONTENT_TYPE))
+			.and(warp::header::optional::<String>(
+				CONTENT_TYPE.as_str(),
+			))
 			.and_then(login_filter_fn);
 
 		let filters: BoxedFilter<(Box<dyn Reply>,)> = login_filter

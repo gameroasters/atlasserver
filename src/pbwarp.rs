@@ -90,7 +90,7 @@ impl Reply for Protobuf {
 			Ok(body) => {
 				let mut res = Response::new(body.into());
 				res.headers_mut().insert(
-					CONTENT_TYPE,
+					CONTENT_TYPE.as_str(),
 					HeaderValue::from_static(
 						"application/x-protobuf",
 					),
