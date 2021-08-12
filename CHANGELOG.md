@@ -10,14 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [0.2.0] - 2021-08-12
 
 ## Added
-
 - `user/validate_session` endpoint which returns `RejectionResponse` on non Ok session. Analogous to behaviour of `session_filter`.
 If session is Ok, returns empty `ValidateSessionResponse`
 
 ## [0.1.2] - 2021-07-01
 
 ## Changed
-
 - update tokio and change dependency to pin only on `1` since its promised to be a stable API
 - removed Cargo.lock since we are just a library
 - bump `rusoto` to `0.47`
@@ -25,13 +23,10 @@ If session is Ok, returns empty `ValidateSessionResponse`
 ## [0.1.1] - 2021-06-05
 
 ## Fixes
-
 - logout of a previous session was not working correctly [d385b98]
 
 ## Added
-
 - move simple `/status` endpoint into atlas to simplify healthprobes of cloud loadbalancers
 
 ## Changed
-
 - `on_login` and `on_register` can now fail and prevent atlas from performing the login/register
