@@ -253,14 +253,22 @@ impl CustomModule for UserLogin {
 			.and(warp::header::optional::<String>("X-Forwarded-For"))
 			.and(warp::addr::remote())
 			.and(pbwarp::protobuf_body::<schema::LoginRequest>())
-			.and(userlogin)
+			.and(userlogin.clone())
 			.and(warp::header::optional::<String>(
 				CONTENT_TYPE.as_str(),
 			))
 			.and_then(login_filter_fn);
 
+		let validate_session_filter =
+			warp::path!("user" / "validate_session")
+				.and(warp::post())
+				.and(userlogin)
+				.and(warp::header::header::<String>(HEADER_SESSION))
+				.and_then(validate_session_fn);
+
 		let filters: BoxedFilter<(Box<dyn Reply>,)> = login_filter
 			.or(register_filter)
+			.or(validate_session_filter)
 			.map(move |reply| -> Box<dyn Reply> { Box::new(reply) })
 			.boxed();
 
@@ -348,28 +356,41 @@ async fn register_filter_fn(
 	.into_response())
 }
 
+async fn validate_session_fn(
+	resource: Arc<UserLoginResource>,
+	session: String,
+) -> Result<impl warp::Reply, Rejection> {
+	handle_session(resource, session)
+		.await
+		.map(|_| warp::reply())
+}
+
+/// Returns filter that checks session status, which returns rejection if session is not Ok.
+/// If session is Ok, request passes through normally
+///
+/// Intended to be used for composing warp filters
 pub fn session_filter(
 	resource: Arc<UserLoginResource>,
 ) -> impl Filter<Extract = (String,), Error = Rejection> + Clone {
-	async fn handle_session(
-		resource: Arc<UserLoginResource>,
-		session: String,
-	) -> Result<String, Rejection> {
-		match resource.validate_session(&session).await {
-			SessionValidationResult::Ok { user_id } => Ok(user_id),
-			SessionValidationResult::Invalid => {
-				Err(warp::reject::custom(SessionFailure::Invalid))
-			}
-			SessionValidationResult::Unknown => Err(
-				warp::reject::custom(SessionFailure::SessionNotFound),
-			),
-		}
-	}
-
 	warp::any()
 		.map(move || resource.clone())
 		.and(warp::header::header::<String>(HEADER_SESSION))
 		.and_then(handle_session)
+}
+
+async fn handle_session(
+	resource: Arc<UserLoginResource>,
+	session: String,
+) -> Result<String, Rejection> {
+	match resource.validate_session(&session).await {
+		SessionValidationResult::Ok { user_id } => Ok(user_id),
+		SessionValidationResult::Invalid => {
+			Err(warp::reject::custom(SessionFailure::Invalid))
+		}
+		SessionValidationResult::Unknown => {
+			Err(warp::reject::custom(SessionFailure::SessionNotFound))
+		}
+	}
 }
 
 #[must_use]
