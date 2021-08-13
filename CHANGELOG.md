@@ -7,11 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## [0.2.0] - 2021-08-12
-
 ## Added
 - `user/validate_session` endpoint which returns `RejectionResponse` on non Ok session. Analogous to behaviour of `session_filter`.
 If session is Ok, returns empty `ValidateSessionResponse`
+
+## Changed
+- change main server start method from verbose `atlasserver::initialize_server` to `atlasserver::init`
+- use regular content-type header instead of custom one `x-content-type`
 
 ## [0.1.2] - 2021-07-01
 

@@ -1250,125 +1250,6 @@ impl ::protobuf::reflect::ProtobufValue for RejectionResponse_SessionFilterRejec
     }
 }
 
-#[derive(PartialEq,Clone,Default)]
-#[cfg_attr(feature = "with-serde", derive(::serde::Serialize, ::serde::Deserialize))]
-pub struct ValidateSessionResponse {
-    // special fields
-    #[cfg_attr(feature = "with-serde", serde(skip))]
-    pub unknown_fields: ::protobuf::UnknownFields,
-    #[cfg_attr(feature = "with-serde", serde(skip))]
-    pub cached_size: ::protobuf::CachedSize,
-}
-
-impl<'a> ::std::default::Default for &'a ValidateSessionResponse {
-    fn default() -> &'a ValidateSessionResponse {
-        <ValidateSessionResponse as ::protobuf::Message>::default_instance()
-    }
-}
-
-impl ValidateSessionResponse {
-    pub fn new() -> ValidateSessionResponse {
-        ::std::default::Default::default()
-    }
-}
-
-impl ::protobuf::Message for ValidateSessionResponse {
-    fn is_initialized(&self) -> bool {
-        true
-    }
-
-    fn merge_from(&mut self, is: &mut ::protobuf::CodedInputStream<'_>) -> ::protobuf::ProtobufResult<()> {
-        while !is.eof()? {
-            let (field_number, wire_type) = is.read_tag_unpack()?;
-            match field_number {
-                _ => {
-                    ::protobuf::rt::read_unknown_or_skip_group(field_number, wire_type, is, self.mut_unknown_fields())?;
-                },
-            };
-        }
-        ::std::result::Result::Ok(())
-    }
-
-    // Compute sizes of nested messages
-    #[allow(unused_variables)]
-    fn compute_size(&self) -> u32 {
-        let mut my_size = 0;
-        my_size += ::protobuf::rt::unknown_fields_size(self.get_unknown_fields());
-        self.cached_size.set(my_size);
-        my_size
-    }
-
-    fn write_to_with_cached_sizes(&self, os: &mut ::protobuf::CodedOutputStream<'_>) -> ::protobuf::ProtobufResult<()> {
-        os.write_unknown_fields(self.get_unknown_fields())?;
-        ::std::result::Result::Ok(())
-    }
-
-    fn get_cached_size(&self) -> u32 {
-        self.cached_size.get()
-    }
-
-    fn get_unknown_fields(&self) -> &::protobuf::UnknownFields {
-        &self.unknown_fields
-    }
-
-    fn mut_unknown_fields(&mut self) -> &mut ::protobuf::UnknownFields {
-        &mut self.unknown_fields
-    }
-
-    fn as_any(&self) -> &dyn (::std::any::Any) {
-        self as &dyn (::std::any::Any)
-    }
-    fn as_any_mut(&mut self) -> &mut dyn (::std::any::Any) {
-        self as &mut dyn (::std::any::Any)
-    }
-    fn into_any(self: ::std::boxed::Box<Self>) -> ::std::boxed::Box<dyn (::std::any::Any)> {
-        self
-    }
-
-    fn descriptor(&self) -> &'static ::protobuf::reflect::MessageDescriptor {
-        Self::descriptor_static()
-    }
-
-    fn new() -> ValidateSessionResponse {
-        ValidateSessionResponse::new()
-    }
-
-    fn descriptor_static() -> &'static ::protobuf::reflect::MessageDescriptor {
-        static descriptor: ::protobuf::rt::LazyV2<::protobuf::reflect::MessageDescriptor> = ::protobuf::rt::LazyV2::INIT;
-        descriptor.get(|| {
-            let fields = ::std::vec::Vec::new();
-            ::protobuf::reflect::MessageDescriptor::new_pb_name::<ValidateSessionResponse>(
-                "ValidateSessionResponse",
-                fields,
-                file_descriptor_proto()
-            )
-        })
-    }
-
-    fn default_instance() -> &'static ValidateSessionResponse {
-        static instance: ::protobuf::rt::LazyV2<ValidateSessionResponse> = ::protobuf::rt::LazyV2::INIT;
-        instance.get(ValidateSessionResponse::new)
-    }
-}
-
-impl ::protobuf::Clear for ValidateSessionResponse {
-    fn clear(&mut self) {
-        self.unknown_fields.clear();
-    }
-}
-
-impl ::std::fmt::Debug for ValidateSessionResponse {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        ::protobuf::text_format::fmt(self, f)
-    }
-}
-
-impl ::protobuf::reflect::ProtobufValue for ValidateSessionResponse {
-    fn as_ref(&self) -> ::protobuf::reflect::ReflectValueRef {
-        ::protobuf::reflect::ReflectValueRef::Message(self)
-    }
-}
-
 static file_descriptor_proto_data: &'static [u8] = b"\
     \n\x0cschema.proto\x1a\x0frustproto.proto\"e\n\x0fRegisterRequest\x12&\n\
     \rclientVersion\x18\x01\x20\x01(\rR\rclientVersionB\0\x12(\n\x0eclientLa\
@@ -1385,8 +1266,7 @@ static file_descriptor_proto_data: &'static [u8] = b"\
     \x20\x01(\x0e2).RejectionResponse.SessionFilterRejectionR\x16sessionFilt\
     erRejectionB\0\"H\n\x16SessionFilterRejection\x12\x08\n\x04NONE\x10\0\
     \x12\x0b\n\x07INVALID\x10\x01\x12\x15\n\x11SESSION_NOT_FOUND\x10\x02\x1a\
-    \0:\0\"\x1b\n\x17ValidateSessionResponse:\0B\x04\xb0\xa8\x08\x01b\x06pro\
-    to3\
+    \0:\0B\x04\xb0\xa8\x08\x01b\x06proto3\
 ";
 
 static file_descriptor_proto_lazy: ::protobuf::rt::LazyV2<::protobuf::descriptor::FileDescriptorProto> = ::protobuf::rt::LazyV2::INIT;

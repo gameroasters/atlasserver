@@ -360,12 +360,9 @@ async fn validate_session_fn(
 	resource: Arc<UserLoginResource>,
 	session: String,
 ) -> Result<impl warp::Reply, Rejection> {
-	handle_session(resource, session).await.map(|_| {
-		pbwarp::protobuf_reply(
-			&schema::ValidateSessionResponse::new(), //Empty response
-			None,
-		)
-	})
+	handle_session(resource, session)
+		.await
+		.map(|_| warp::reply())
 }
 
 /// Returns filter that checks session status, which returns rejection if session is not Ok.

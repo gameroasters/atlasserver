@@ -32,6 +32,3 @@ message RejectionResponse {
     SESSION_NOT_FOUND = 2;
   }
 }
-
-message ValidateSessionResponse {
-}
