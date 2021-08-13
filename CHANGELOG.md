@@ -13,6 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Added
 - added `atlasserver::init_with_graceful_shutdown` to start a server that listens for a signal to execute a graceful shutdown (see `graceful_shutdown` example)
+- added `user/validate_session` endpoint which returns `RejectionResponse` on non Ok session. Analogous to behaviour of `session_filter`.
+If session is Ok, returns empty body
 
 ## [0.1.2] - 2021-07-01
 
