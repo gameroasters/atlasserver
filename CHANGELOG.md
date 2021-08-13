@@ -7,13 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
-## Added
-- `user/validate_session` endpoint which returns `RejectionResponse` on non Ok session. Analogous to behaviour of `session_filter`.
-If session is Ok, returns empty `ValidateSessionResponse`
-
 ## Changed
 - change main server start method from verbose `atlasserver::initialize_server` to `atlasserver::init`
 - use regular content-type header instead of custom one `x-content-type`
+
+## Added
+- added `atlasserver::init_with_graceful_shutdown` to start a server that listens for a signal to execute a graceful shutdown (see `graceful_shutdown` example)
 
 ## [0.1.2] - 2021-07-01
 
@@ -21,7 +20,7 @@ If session is Ok, returns empty `ValidateSessionResponse`
 - update tokio and change dependency to pin only on `1` since its promised to be a stable API
 - removed Cargo.lock since we are just a library
 - bump `rusoto` to `0.47`
-
+  
 ## [0.1.1] - 2021-06-05
 
 ## Fixes
