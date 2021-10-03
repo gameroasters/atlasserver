@@ -164,6 +164,7 @@ impl SessionDB for DynamoSessionDB {
 	}
 
 	#[instrument(skip(self))]
+	#[allow(clippy::suspicious_else_formatting)]
 	async fn invalidate(&self, key: &str) -> Option<()> {
 		tracing::debug!("SessionDB::invalidate");
 
