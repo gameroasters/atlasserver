@@ -1,0 +1,22 @@
+[package]
+name = "atlas_apple_server_notify"
+version = "0.1.0"
+edition = "2018"
+
+[features]
+default = []
+
+[dependencies]
+# atlasserver = { version = "0.1.2" }
+atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
+# atlasserver = { path = "../../atlasserver" }
+async-trait = "0.1"
+frunk = "0.3"
+tracing = "0.1"
+serde = { version = "1.0", features = ["derive"] }
+tracing-futures = "0.2"
+tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
+warp = "0.3"
+
+[dev-dependencies]
+pretty_assertions = "0.7"

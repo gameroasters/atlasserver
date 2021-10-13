@@ -1,0 +1,4 @@
+syntax = "proto3";
+
+message FcmTokenStoreRequest { string token = 1; }
+message FcmTokenStoreResponse { bool success = 1; }

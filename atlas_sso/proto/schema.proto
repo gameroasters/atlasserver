@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+//TODO: rename `SiwaRequest`
+message AppleSignInRequest {
+  string userId = 1;
+  string token = 2;
+}
+
+message SsoIdResponse {
+  enum Result {
+    OK = 0;
+    ALREADY_ASSIGNED = 1;
+    OUTDATED_TOKEN = 2;
+  }
+  Result result = 1;
+}
+
+message DisconnectSiwaResponse {
+  bool success = 1;
+}

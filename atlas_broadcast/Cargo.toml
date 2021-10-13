@@ -1,0 +1,16 @@
+[package]
+name = "atlas_broadcast"
+version = "0.1.0"
+edition = "2018"
+
+[features]
+default = []
+
+[dependencies]
+tokio = { version = "1", features = ["rt-multi-thread","net","macros","sync","time"] }
+async-trait = "0.1"
+tracing = "0.1"
+tracing-futures = "0.2"
+
+[dev-dependencies]
+pretty_assertions = "0.7"

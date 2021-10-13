@@ -1,0 +1,5 @@
+syntax = "proto3";
+
+message PurchaseResponse {
+  bool valid = 1;
+}

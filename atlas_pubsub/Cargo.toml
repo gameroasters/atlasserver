@@ -1,0 +1,30 @@
+[package]
+name = "atlas_pubsub"
+version = "0.1.0"
+authors = ["Stephan Dilly <dilly.stephan@gmail.com>"]
+edition = "2018"
+
+[features]
+default = ["publish-endpoint"]
+publish-endpoint = []
+
+[dependencies]
+# atlasserver = { version = "0.1.2" }
+atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
+# atlasserver = { path = "../../atlasserver" }
+tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
+redis = { version = "0.21", default-features = false, features = ["tokio-comp","connection-manager"] }
+deadpool-redis = { version = "0.9", default-features = false, features = ["rt_tokio_1"] }
+warp = "0.3"
+async-trait = "0.1"
+frunk = "0.3"
+tracing = "0.1"
+thiserror = "1.0"
+tokio-stream = "0.1"
+futures = "0.3"
+futures-util = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+postcard = { version = "0.7", default-features = false, features=["use-std"] }
+
+[dev-dependencies]
+pretty_assertions = "0.7"
