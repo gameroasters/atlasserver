@@ -13,8 +13,8 @@ with-serde = []
 
 [dependencies]
 # atlasserver = { version = "0.1.2" }
-atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
-# atlasserver = { path = "../../atlasserver" }
+# atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
+atlasserver = { path = "../atlasserver" }
 async-trait = "0.1"
 chrono = "0.4"
 rusoto_core = "0.47"
