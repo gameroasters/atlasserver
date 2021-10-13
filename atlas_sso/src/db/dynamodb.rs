@@ -1,9 +1,9 @@
 use crate::{
-	dynamo_table::{db_sort_key, table_init_with_sort_key},
 	error::{Error, Result},
 	Provider, SetSsoResult, SsoDB, SsoEntry, SsoKey,
 };
 use async_trait::async_trait;
+use atlas_dynamo::{db_sort_key, table_init_with_sort_key};
 use atlasserver::{dynamo_util::DynamoHashMap, error};
 use rusoto_dynamodb::{
 	AttributeValue, BatchGetItemInput, DeleteItemInput, DynamoDb,

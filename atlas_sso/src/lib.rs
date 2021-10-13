@@ -27,7 +27,6 @@
 #![allow(clippy::missing_errors_doc)]
 
 mod db;
-pub mod dynamo_table;
 pub mod error;
 pub mod schema;
 mod siwa;

@@ -9,8 +9,6 @@ default = ["publish-endpoint"]
 publish-endpoint = []
 
 [dependencies]
-# atlasserver = { version = "0.1.2" }
-# atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
 atlasserver = { path = "../atlasserver" }
 tokio = { version = "1", default-features = false, features = ["macros", "rt-multi-thread"] }
 redis = { version = "0.21", default-features = false, features = ["tokio-comp","connection-manager"] }

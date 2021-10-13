@@ -12,9 +12,8 @@ json-proto = ["with-serde"]
 with-serde = []
 
 [dependencies]
-# atlasserver = { version = "0.1.2" }
-# atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
 atlasserver = { path = "../atlasserver" }
+atlas_dynamo = { path = "../atlas_dynamo" }
 async-trait = "0.1"
 chrono = "0.4"
 rusoto_core = "0.47"
@@ -30,8 +29,6 @@ tokio = { version = "1", default-features = false, features = ["macros", "rt-mul
 uuid = { version = "0.8", features = ["v4"] }
 warp = "0.3"
 protobuf = { version = "=2.22.1", features = ["with-serde"] }
-# TODO:
-atlas_sso = { path = "../atlas_sso" }
 
 [dev-dependencies]
 mockall = "0.10"

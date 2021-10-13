@@ -5,9 +5,7 @@ use crate::{
 	Platform, Receipt,
 };
 use async_trait::async_trait;
-use atlas_sso::dynamo_table::{
-	db_sort_key, table_init_with_sort_key,
-};
+use atlas_dynamo::{db_sort_key, table_init_with_sort_key};
 use atlasserver::dynamo_util::DynamoHashMap;
 use rusoto_dynamodb::{
 	AttributeValue, DynamoDb, DynamoDbClient, GetItemInput,

@@ -1,6 +1,6 @@
-//TODO: move into its own crate atlas_dynamo
+mod error;
 
-use crate::error::Result;
+pub use crate::error::{Error, Result};
 use rusoto_dynamodb::{
 	AttributeDefinition, AttributeValue, CreateTableInput, DynamoDb,
 	KeySchemaElement, ListTablesInput, ProvisionedThroughput,

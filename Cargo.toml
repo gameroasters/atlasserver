@@ -5,6 +5,7 @@ members = [
     "atlas_ads",
     "atlas_apple_server_notify",
     "atlas_broadcast",
+    "atlas_dynamo",
     "atlas_iap",
     "atlas_pubsub",
     "atlas_push",

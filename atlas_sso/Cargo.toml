@@ -9,9 +9,8 @@ json-proto = ["with-serde"]
 with-serde = []
 
 [dependencies]
-# atlasserver = { version = "0.1.2" }
-# atlasserver = { git = "https://github.com/gameroasters/atlasserver.git", rev="f40dd52"}
 atlasserver = { path = "../atlasserver" }
+atlas_dynamo = { path = "../atlas_dynamo" }
 tokio = { version = "1", features = ["rt-multi-thread","net","macros"] }
 warp = { version = "0.3", default-features = false }
 async-trait = "0.1"

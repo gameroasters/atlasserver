@@ -8,7 +8,7 @@ pub enum Error {
 	#[error("serde_json error: {0}")]
 	Json(#[from] serde_json::Error),
 	#[error("dynamo error: {0}")]
-	Atlas(#[from] atlas_sso::error::Error),
+	Atlas(#[from] atlas_dynamo::Error),
 	#[error("rusoto put error: {0}")]
 	RusotoPutItem(#[from] rusoto_core::RusotoError<PutItemError>),
 	#[error("DynamoDeserializeError for field: {0}")]
