@@ -17,9 +17,6 @@ pub enum Error {
 	#[error("aws error: {0}")]
 	RusotoPutItem(#[from] RusotoError<PutItemError>),
 
-	#[error("table {0} not found error")]
-	TableNotFound(String),
-
 	#[error("aws error: {0}")]
 	RusotoListTables(#[from] RusotoError<ListTablesError>),
 
@@ -32,8 +29,8 @@ pub enum Error {
 	#[error("aws error: {0}")]
 	RusotoTls(#[from] TlsError),
 
-	#[error("DynamoDeserializeError for field: {0}")]
-	DynamoDeserialize(&'static str),
+	#[error("dynamo error: {0}")]
+	Dynamo(#[from] atlas_dynamo::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

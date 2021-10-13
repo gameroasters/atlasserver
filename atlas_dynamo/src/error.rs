@@ -1,3 +1,4 @@
+use rusoto_core::{credential::CredentialsError, request::TlsError};
 use rusoto_dynamodb::{
 	CreateTableError, DeleteItemError, ListTablesError, PutItemError,
 };
@@ -11,8 +12,6 @@ pub enum Error {
 	UnknownUser,
 	#[error("unable to get entry")]
 	GetEntry,
-	#[error("dynamo error: {0}")]
-	Atlas(#[from] atlasserver::error::Error),
 	#[error("rusoto error: {0}")]
 	RusotoCreateTable(
 		#[from] rusoto_core::RusotoError<CreateTableError>,
@@ -27,6 +26,14 @@ pub enum Error {
 	RusotoDeleteItem(
 		#[from] rusoto_core::RusotoError<DeleteItemError>,
 	),
+	#[error("aws error: {0}")]
+	RusotoCredentials(#[from] CredentialsError),
+	#[error("aws error: {0}")]
+	RusotoTls(#[from] TlsError),
+	#[error("table {0} not found error")]
+	TableNotFound(String),
+	#[error("DynamoDeserializeError for field: {0}")]
+	DynamoDeserialize(&'static str),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

@@ -8,7 +8,7 @@ pub enum Error {
 	#[error("fcm error: {0}")]
 	Fcm(#[from] fcm::FcmError),
 	#[error("dynamo error: {0}")]
-	Atlas(#[from] atlasserver::error::Error),
+	Atlas(#[from] atlas_dynamo::Error),
 	#[error("rusoto put error: {0}")]
 	DynamoPut(#[from] rusoto_core::RusotoError<PutItemError>),
 }

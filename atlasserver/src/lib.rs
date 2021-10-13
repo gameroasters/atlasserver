@@ -11,7 +11,6 @@
 #![allow(clippy::module_name_repetitions)]
 #![allow(clippy::upper_case_acronyms)]
 
-pub mod dynamo_util;
 pub mod error;
 pub mod pbwarp;
 pub mod rejection;

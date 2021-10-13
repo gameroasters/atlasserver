@@ -3,9 +3,8 @@ use crate::{
 	fcmtoken::{FcmToken, FcmTokenDB},
 };
 use async_trait::async_trait;
-use atlasserver::{
-	dynamo_util::{db_key, table_init, DynamoHashMap},
-	error::Error,
+use atlas_dynamo::{
+	db_key, table_init, DynamoHashMap, Error::DynamoDeserialize,
 };
 use rusoto_dynamodb::{
 	AttributeValue, DynamoDb, DynamoDbClient, GetItemInput,
@@ -100,11 +99,11 @@ impl TryFrom<HashMap<String, AttributeValue>> for FcmToken {
 			id: map
 				.get("id")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("id"))?,
+				.ok_or(DynamoDeserialize("id"))?,
 			token: map
 				.get("token")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("token"))?,
+				.ok_or(DynamoDeserialize("token"))?,
 		})
 	}
 }

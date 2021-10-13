@@ -12,6 +12,7 @@ repository = "https://github.com/gameroasters/atlasserver"
 homepage = "https://github.com/gameroasters/atlasserver"
 
 [dependencies]
+atlas_dynamo = { path = "../atlas_dynamo" }
 async-trait = "0.1"
 frunk = "0.3"
 warp = "0.3"

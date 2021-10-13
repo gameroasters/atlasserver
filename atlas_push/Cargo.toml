@@ -11,6 +11,7 @@ with-serde = []
 
 [dependencies]
 atlasserver = { path = "../atlasserver" }
+atlas_dynamo = { path = "../atlas_dynamo" }
 async-trait = "0.1"
 # fcm = "0.9"
 fcm = { git = "https://github.com/extrawurst/fcm-rust.git", rev="dc5a6be"}

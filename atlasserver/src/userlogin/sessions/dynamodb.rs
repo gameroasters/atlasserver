@@ -1,9 +1,9 @@
 use super::{Session, SessionDB};
-use crate::{
-	dynamo_util::{db_key, table_init, DynamoHashMap},
-	error::{Error, Result},
-};
+use crate::error::Result;
 use async_trait::async_trait;
+use atlas_dynamo::{
+	db_key, table_init, DynamoHashMap, Error::DynamoDeserialize,
+};
 use chrono::{DateTime, Duration, NaiveDateTime, Utc};
 use rusoto_dynamodb::{
 	AttributeValue, DynamoDb, DynamoDbClient, PutItemInput,
@@ -120,21 +120,21 @@ impl TryFrom<DynamoHashMap> for DynamoSession {
 			id: attributes
 				.get(&"id".to_string())
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("id"))?,
+				.ok_or(DynamoDeserialize("id"))?,
 			user_id: attributes
 				.get(&"user_id".to_string())
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("user_id"))?,
+				.ok_or(DynamoDeserialize("user_id"))?,
 			valid: attributes
 				.get(&"valid".to_string())
 				.and_then(|attr| attr.s.as_ref())
 				.and_then(|attr| attr.parse::<bool>().ok())
-				.ok_or(Error::DynamoDeserialize("valid"))?,
+				.ok_or(DynamoDeserialize("valid"))?,
 			ttl: attributes
 				.get(&"ttl".to_string())
 				.and_then(|attr| attr.n.as_ref())
 				.and_then(|attr| attr.parse::<i64>().ok())
-				.ok_or(Error::DynamoDeserialize("ttl"))?,
+				.ok_or(DynamoDeserialize("ttl"))?,
 		})
 	}
 }

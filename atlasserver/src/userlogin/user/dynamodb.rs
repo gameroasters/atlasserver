@@ -4,11 +4,11 @@ use std::{
 };
 
 use super::{User, UserDB};
-use crate::{
-	dynamo_util::{db_key, table_init, DynamoHashMap},
-	error::{Error, Result},
-};
+use crate::error::Result;
 use async_trait::async_trait;
+use atlas_dynamo::{
+	db_key, table_init, DynamoHashMap, Error::DynamoDeserialize,
+};
 use rusoto_dynamodb::{
 	AttributeValue, DynamoDb, DynamoDbClient, GetItemInput,
 	PutItemInput,
@@ -147,16 +147,16 @@ impl TryFrom<HashMap<String, AttributeValue>> for User {
 			id: attributes
 				.get("id")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("id"))?,
+				.ok_or(DynamoDeserialize("id"))?,
 			version: attributes
 				.get("version")
 				.and_then(|attr| attr.n.as_ref())
 				.and_then(|n| n.parse::<u64>().ok())
-				.ok_or(Error::DynamoDeserialize("version"))?,
+				.ok_or(DynamoDeserialize("version"))?,
 			secret: attributes
 				.get("secret")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(Error::DynamoDeserialize("secret"))?,
+				.ok_or(DynamoDeserialize("secret"))?,
 			session: attributes
 				.get("session")
 				.and_then(|attr| attr.s.clone()),

@@ -6,7 +6,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-atlasserver = { path = "../atlasserver" }
 rusoto_dynamodb = "0.47"
 rusoto_core = "0.47"
 tracing = "0.1"

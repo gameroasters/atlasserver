@@ -3,8 +3,8 @@ use crate::{
 	Provider, SetSsoResult, SsoDB, SsoEntry, SsoKey,
 };
 use async_trait::async_trait;
+use atlas_dynamo::DynamoHashMap;
 use atlas_dynamo::{db_sort_key, table_init_with_sort_key};
-use atlasserver::{dynamo_util::DynamoHashMap, error};
 use rusoto_dynamodb::{
 	AttributeValue, BatchGetItemInput, DeleteItemInput, DynamoDb,
 	DynamoDbClient, GetItemInput, KeysAndAttributes, PutItemInput,
@@ -233,16 +233,22 @@ impl TryFrom<DynamoHashMap> for SsoEntry {
 			user_id: attributes
 				.get("user_id")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(error::Error::DynamoDeserialize("user_id"))?,
+				.ok_or(atlas_dynamo::Error::DynamoDeserialize(
+					"user_id",
+				))?,
 			provider: attributes
 				.get("sort")
 				.and_then(|attr| attr.s.as_ref())
 				.and_then(|s| Provider::from_str(s).ok())
-				.ok_or(error::Error::DynamoDeserialize("sort"))?,
+				.ok_or(atlas_dynamo::Error::DynamoDeserialize(
+					"sort",
+				))?,
 			provider_id: attributes
 				.get("id")
 				.and_then(|attr| attr.s.clone())
-				.ok_or(error::Error::DynamoDeserialize("id"))?,
+				.ok_or(atlas_dynamo::Error::DynamoDeserialize(
+					"id",
+				))?,
 		})
 	}
 }
