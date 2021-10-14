@@ -68,41 +68,41 @@ where
 /// # struct MyModule {};
 /// #
 /// # impl CustomModule for MyModule {
-/// 	# type Resources = Hlist![];
-/// 	# fn create_filter<S: ModuleResources<Self>>(
-///			# server: std::sync::Arc<S>,
-///		# ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
-/// 		# warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
-/// 	# }
+///     # type Resources = Hlist![];
+///     # fn create_filter<S: ModuleResources<Self>>(
+///         # server: std::sync::Arc<S>,
+///     # ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
+///         # warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
+///     # }
 /// # }
 /// #
 /// # impl ModuleResources<MyModule> for MyServer {
-/// 	# fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
-/// 		# hlist![]
-/// 	# }
+///     # fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
+///         # hlist![]
+///     # }
 /// # }
 /// #
 /// struct MyServer {
-/// 	resources: <Self as CustomServer>::Resources
+///     resources: <Self as CustomServer>::Resources
 /// }
 ///
 /// impl CustomServer for MyServer {
-/// 	type Resources = Hlist![Arc<MyModule>];
+///     type Resources = Hlist![Arc<MyModule>];
 ///
-///		const MODULES: &'static [Module<Self>] = &[
-/// 		Module {
-/// 			name: "my_module",
-/// 			call: MyModule::create_filter
-///			}
-/// 	];
+///     const MODULES: &'static [Module<Self>] = &[
+///         Module {
+///             name: "my_module",
+///             call: MyModule::create_filter
+///         }
+///     ];
 ///
-/// 	fn get_resources(&self) -> &Self::Resources {
-/// 		&self.resources
-/// 	}
+///     fn get_resources(&self) -> &Self::Resources {
+///         &self.resources
+///     }
 /// }
 /// ```
 pub trait CustomServer: Send + Sync + 'static + Sized {
-	/// An HList containing any type that would be required to act on in some way through the filters.
+	/// An `HList` containing any type that would be required to act on in some way through the filters.
 	/// Any persistent data or database accesses should be handled in the resource types.
 	/// Any types which take a lifetime parameter must have `'static` lifetime, and can be constructed
 	/// in the table definition to satisfy the lifetime.
@@ -131,13 +131,13 @@ pub trait CustomServer: Send + Sync + 'static + Sized {
 	/// }
 	///
 	/// impl CustomServer for MyServer {
-	/// 	# type Resources = Hlist![];
-	/// 	# const MODULES: &'static [Module<Self>] = &[];
-	///		// ...
+	///     # type Resources = Hlist![];
+	///     # const MODULES: &'static [Module<Self>] = &[];
+	///     // ...
 	///
-	/// 	fn get_resources(&self) -> &Self::Resources {
-	/// 		&self.resources
-	/// 	}
+	///     fn get_resources(&self) -> &Self::Resources {
+	///         &self.resources
+	///     }
 	/// }
 	/// ```
 	fn get_resources(&self) -> &Self::Resources;
@@ -159,41 +159,41 @@ pub trait CustomServer: Send + Sync + 'static + Sized {
 /// struct MyModule;
 ///
 /// impl CustomModule for MyModule {
-///		type Resources = Hlist![Arc<MyResource>, Arc<AnotherResource>];
+///     type Resources = Hlist![Arc<MyResource>, Arc<AnotherResource>];
 ///
-/// 	fn create_filter<S: ModuleResources<Self>>(
-///			server: Arc<S>,
-///		) -> BoxedFilter<(Box<dyn Reply>,)> {
+///     fn create_filter<S: ModuleResources<Self>>(
+///         server: Arc<S>,
+///     ) -> BoxedFilter<(Box<dyn Reply>,)> {
 ///
-/// 		// Get our resources from the server
-///			let (reshaped, _): (Self::Resources, _) = server.get_server_resources().sculpt();
-/// 		let (my_resource, another_resource) = reshaped.into_tuple2();
+///         // Get our resources from the server
+///         let (reshaped, _): (Self::Resources, _) = server.get_server_resources().sculpt();
+///         let (my_resource, another_resource) = reshaped.into_tuple2();
 ///
-///			let some_path = warp::path!("some" / "path")
-/// 			// Use a resource as an argument in the filter function
-/// 			.and(warp::any().map(move || my_resource.clone()))
-/// 			.and_then(some_path_fn);
+///         let some_path = warp::path!("some" / "path")
+///             // Use a resource as an argument in the filter function
+///             .and(warp::any().map(move || my_resource.clone()))
+///             .and_then(some_path_fn);
 ///
-/// 		let some_other_path = warp::path!("some" / "other" / "path")
-/// 			.and(warp::any().map(move || another_resource.clone()))
-/// 			.and_then(some_other_path_fn);
+///         let some_other_path = warp::path!("some" / "other" / "path")
+///             .and(warp::any().map(move || another_resource.clone()))
+///             .and_then(some_other_path_fn);
 ///
-/// 		// Combine the filters and box them
-/// 		some_path
-/// 			.or(some_other_path)
-/// 			.map(|reply| -> Box<dyn Reply> { Box::new(reply) })
-/// 			.boxed()
-/// 	}
+///         // Combine the filters and box them
+///         some_path
+///             .or(some_other_path)
+///             .map(|reply| -> Box<dyn Reply> { Box::new(reply) })
+///             .boxed()
+///     }
 /// }
 ///
 /// async fn some_path_fn(resource: Arc<MyResource>) -> Result<impl Reply, Rejection> {
-/// 	// Do something with the resource here, ie: database input, etc
-/// 	# Ok(warp::reply())
+///     // Do something with the resource here, ie: database input, etc
+///     # Ok(warp::reply())
 /// }
 ///
 /// async fn some_other_path_fn(resource: Arc<AnotherResource>) -> Result<impl Reply, Rejection> {
-/// 	// Do something with the resource here, ie: database input, etc
-/// 	# Ok(warp::reply())
+///     // Do something with the resource here, ie: database input, etc
+///     # Ok(warp::reply())
 /// }
 /// ```
 #[async_trait]
@@ -222,12 +222,12 @@ pub trait CustomModule: Send + Sync + Sized {
 /// # struct MyModule;
 /// #
 /// # impl CustomModule for MyModule {
-/// 	# type Resources = Hlist![];
-/// 	# fn create_filter<S: ModuleResources<Self>>(
-///			# server: std::sync::Arc<S>,
-///		# ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
-/// 		# warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
-/// 	# }
+///     # type Resources = Hlist![];
+///     # fn create_filter<S: ModuleResources<Self>>(
+///         # server: std::sync::Arc<S>,
+///     # ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
+///         # warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
+///     # }
 /// # }
 /// #
 /// # struct MyServer {
@@ -235,24 +235,24 @@ pub trait CustomModule: Send + Sync + Sized {
 /// # }
 /// #
 /// # impl CustomServer for MyServer {
-/// 	# type Resources = Hlist![];
-/// 	# const MODULES: &'static [Module<Self>] = &[
-/// 		# Module {
-/// 			# name: "",
-/// 			# call: MyModule::create_filter
-/// 		# }
-/// 	# ];
-///
-/// 	# fn get_resources(&self) -> &Self::Resources {
-/// 		# &self.resources
-/// 	# }
+///     # type Resources = Hlist![];
+///     # const MODULES: &'static [Module<Self>] = &[
+///         # Module {
+///             # name: "",
+///             # call: MyModule::create_filter
+///         # }
+///     # ];
+/// #
+///     # fn get_resources(&self) -> &Self::Resources {
+///         # &self.resources
+///     # }
 /// # }
 /// #
 /// impl ModuleResources<MyModule> for MyServer {
-/// 	fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
-/// 		let (reshaped, _) = self.get_resources().clone().sculpt();
-///			reshaped
-/// 	}
+///     fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
+///         let (reshaped, _) = self.get_resources().clone().sculpt();
+///         reshaped
+///     }
 /// }
 /// ```
 pub trait ModuleResources<T: CustomModule>: CustomServer {
@@ -289,18 +289,18 @@ pub fn trace_request() -> Trace<impl Fn(Info) -> Span + Clone> {
 /// # struct MyResource;
 /// #
 /// # impl MyResource {
-/// # 	pub fn new() -> Self { Self }
+/// #     pub fn new() -> Self { Self }
 /// # }
 /// #
 /// # struct MyModule;
 /// #
 /// # impl CustomModule for MyModule {
-/// 	# type Resources = Hlist![];
-/// 	# fn create_filter<S: ModuleResources<Self>>(
-///			# server: std::sync::Arc<S>,
-///		# ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
-/// 		# warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
-/// 	# }
+///     # type Resources = Hlist![];
+///     # fn create_filter<S: ModuleResources<Self>>(
+///         # server: std::sync::Arc<S>,
+///     # ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
+///         # warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
+///     # }
 /// # }
 /// #
 /// # struct MyServer {
@@ -308,39 +308,39 @@ pub fn trace_request() -> Trace<impl Fn(Info) -> Span + Clone> {
 /// # }
 /// #
 /// # impl CustomServer for MyServer {
-/// 	# type Resources = Hlist![Arc<MyResource>];
-/// 	# const MODULES: &'static [Module<Self>] = &[
-/// 		# Module {
-/// 			# name: "",
-/// 			# call: MyModule::create_filter
-/// 		# }
-/// 	# ];
-///	#
-/// 	# fn get_resources(&self) -> &Self::Resources {
-/// 		# &self.resources
-/// 	# }
+///     # type Resources = Hlist![Arc<MyResource>];
+///     # const MODULES: &'static [Module<Self>] = &[
+///         # Module {
+///             # name: "",
+///             # call: MyModule::create_filter
+///         # }
+///     # ];
+/// #
+///     # fn get_resources(&self) -> &Self::Resources {
+///         # &self.resources
+///     # }
 /// # }
 /// #
 /// # impl ModuleResources<MyModule> for MyServer {
-/// 	# fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
-/// 		# let (reshaped, _) = self.get_resources().clone().sculpt();
-///			# reshaped
-/// 	# }
+///     # fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
+///         # let (reshaped, _) = self.get_resources().clone().sculpt();
+///         # reshaped
+///     # }
 /// # }
 /// #
 /// #[tokio::main]
 /// async fn main() {
-/// 	let my_server = MyServer {
-/// 		resources: hlist![
-/// 			Arc::new(MyResource::new())
-/// 		]
-/// 	};
+///     let my_server = MyServer {
+///         resources: hlist![
+///             Arc::new(MyResource::new())
+///         ]
+///     };
 ///
-/// 	let future = atlasserver::init(Arc::new(my_server), ([0, 0, 0, 0], 8080));
-/// 	# let (abort_handle, abort_registration) = AbortHandle::new_pair();
-/// 	# let future = Abortable::new(future, abort_registration);
-/// 	# abort_handle.abort();
-/// 	future.await;
+///     let future = atlasserver::init(Arc::new(my_server), ([0, 0, 0, 0], 8080));
+///     # let (abort_handle, abort_registration) = AbortHandle::new_pair();
+///     # let future = Abortable::new(future, abort_registration);
+///     # abort_handle.abort();
+///     future.await;
 /// }
 /// ```
 pub async fn init<S: CustomServer>(
@@ -400,18 +400,18 @@ pub async fn init<S: CustomServer>(
 /// # struct MyResource;
 /// #
 /// # impl MyResource {
-/// # 	pub fn new() -> Self { Self }
+/// #     pub fn new() -> Self { Self }
 /// # }
 /// #
 /// # struct MyModule;
 /// #
 /// # impl CustomModule for MyModule {
-/// 	# type Resources = Hlist![];
-/// 	# fn create_filter<S: ModuleResources<Self>>(
-///			# server: std::sync::Arc<S>,
-///		# ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
-/// 		# warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
-/// 	# }
+///     # type Resources = Hlist![];
+///     # fn create_filter<S: ModuleResources<Self>>(
+///         # server: std::sync::Arc<S>,
+///     # ) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
+///         # warp::any().map(|| -> Box<dyn warp::Reply> { Box::new(warp::reply()) }).boxed()
+///     # }
 /// # }
 /// #
 /// # struct MyServer {
@@ -419,46 +419,46 @@ pub async fn init<S: CustomServer>(
 /// # }
 /// #
 /// # impl CustomServer for MyServer {
-/// 	# type Resources = Hlist![Arc<MyResource>];
-/// 	# const MODULES: &'static [Module<Self>] = &[
-/// 		# Module {
-/// 			# name: "",
-/// 			# call: MyModule::create_filter
-/// 		# }
-/// 	# ];
+///     # type Resources = Hlist![Arc<MyResource>];
+///     # const MODULES: &'static [Module<Self>] = &[
+///         # Module {
+///             # name: "",
+///             # call: MyModule::create_filter
+///         # }
+///     # ];
 /// #
-/// 	# fn get_resources(&self) -> &Self::Resources {
-/// 		# &self.resources
-/// 	# }
+///     # fn get_resources(&self) -> &Self::Resources {
+///         # &self.resources
+///     # }
 /// # }
 /// #
 /// # impl ModuleResources<MyModule> for MyServer {
-/// 	# fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
-/// 		# let (reshaped, _) = self.get_resources().clone().sculpt();
-///			# reshaped
-/// 	# }
+///     # fn get_server_resources(&self) -> <MyModule as CustomModule>::Resources {
+///         # let (reshaped, _) = self.get_resources().clone().sculpt();
+///         # reshaped
+///     # }
 /// # }
 /// #
 /// #[tokio::main]
 /// async fn main() {
-/// 	let my_server = MyServer {
-/// 		resources: hlist![
-/// 			Arc::new(MyResource::new())
-/// 		]
-/// 	};
+///     let my_server = MyServer {
+///         resources: hlist![
+///             Arc::new(MyResource::new())
+///         ]
+///     };
 ///
-/// 	let (sender, receiver) = tokio::sync::oneshot::channel();
-/// 	// shutdown after 1 second
-/// 	tokio::spawn(async move {
-/// 		tokio::time::sleep(std::time::Duration::from_secs(1));
-/// 		sender.send(())
-/// 	});
+///     let (sender, receiver) = tokio::sync::oneshot::channel();
+///     // shutdown after 1 second
+///     tokio::spawn(async move {
+///         tokio::time::sleep(std::time::Duration::from_secs(1));
+///         sender.send(())
+///     });
 ///
-/// 	atlasserver::init_with_graceful_shutdown(
-/// 		Arc::new(my_server),
-/// 		([0, 0, 0, 0], 8080),
-/// 		receiver
-/// 	).await;
+///     atlasserver::init_with_graceful_shutdown(
+///         Arc::new(my_server),
+///         ([0, 0, 0, 0], 8080),
+///         receiver
+///     ).await;
 /// }
 /// ```
 pub async fn init_with_graceful_shutdown<S: CustomServer>(

@@ -655,7 +655,7 @@ mod tests {
 
 		let filter = UserLogin::create_filter(server);
 		let request = schema::RegisterRequest {
-			clientVersion: 1000000,
+			clientVersion: 1_000_000,
 			..schema::RegisterRequest::default()
 		};
 		let reply = warp::test::request()
@@ -714,7 +714,7 @@ mod tests {
 		);
 
 		let _request: RegisterResponse =
-			serde_json::from_slice(&reply.body()).unwrap();
+			serde_json::from_slice(reply.body()).unwrap();
 	}
 
 	#[tokio::test]
@@ -733,7 +733,7 @@ mod tests {
 			server.get_server_resources().pluck();
 
 		let (response, session) = user_login_resource
-			.user_register(1000000, "en-CA".to_string(), None)
+			.user_register(1_000_000, "en-CA".to_string(), None)
 			.await
 			.unwrap();
 
