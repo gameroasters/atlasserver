@@ -12,10 +12,16 @@
 #![allow(clippy::upper_case_acronyms)]
 
 pub mod error;
+/// Utilities for simplifying the use of protobuf in warp filters and reply types
 pub mod pbwarp;
+/// Rejection handling for reroutable filters
 pub mod rejection;
+/// protobuf message schema for the `userlogin` atlasserver module
 pub mod schema;
+/// atlasserver module provided to give a simple status code 200 server response to
+/// check that the server is running
 pub mod status;
+/// atlasserver module provided for basic user authentication and session handling
 pub mod userlogin;
 
 use crate::userlogin::HEADER_SESSION;
