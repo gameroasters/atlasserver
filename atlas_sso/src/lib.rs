@@ -115,7 +115,7 @@
 mod db;
 pub mod error;
 pub mod schema;
-mod siwa;
+pub mod siwa;
 
 pub use self::db::{
 	DynamoSsoDB, InMemorySsoDB, Provider, SetSsoResult, SsoDB,
