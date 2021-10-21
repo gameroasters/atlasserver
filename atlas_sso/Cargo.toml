@@ -23,8 +23,8 @@ serde = "1"
 serde_json = "1"
 strum = { version = "0.21", features = ["derive"] }
 # TODO: make release
-sign-in-with-apple = { git = "https://github.com/gameroasters/sign-in-with-apple.git", rev="eed3b51" } 
-# sign-in-with-apple = "0.1" 
+sign-in-with-apple = { git = "https://github.com/gameroasters/sign-in-with-apple.git", rev="eed3b51" }
+# sign-in-with-apple = "0.1"
 protobuf = { version = "=2.22.1", features = ["with-serde"] }
 
 [dev-dependencies]
