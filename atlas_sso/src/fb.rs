@@ -7,14 +7,16 @@ use crate::{
 	Provider, SetSsoResult, SsoEntry, SsoKey, SsoResource,
 };
 use async_trait::async_trait;
-use atlasserver::userlogin::UserId;
+use atlasserver::userlogin::{UserId, UserLoginResource};
+use atlasserver::{pbwarp, userlogin};
 use fb_api::types::{Picture, User};
 use fb_api::{FBGraphAPI, GraphAPI};
 use std::sync::Arc;
 use tracing::instrument;
+use warp::{reply, Filter, Rejection, Reply};
 
 #[async_trait]
-pub trait FbCallbacks {
+pub trait FbCallbacks: Send + Sync {
 	async fn on_fb_connected(
 		&self,
 		user_id: UserId,
@@ -27,12 +29,11 @@ pub trait FbCallbacks {
 	) -> Result<()>;
 }
 
-#[instrument(skip(sso, request, callbacks), err)]
+#[instrument(skip(sso, request), err)]
 pub async fn facebook_id<'a>(
 	user_id: String,
 	request: schema::FacebookIdRequest,
 	sso: Arc<SsoResource>,
-	callbacks: impl FbCallbacks,
 ) -> Result<SsoIdResponse> {
 	tracing::info!("facebook_id: {:?}", request);
 
@@ -73,7 +74,9 @@ pub async fn facebook_id<'a>(
 		return Err(Error::Fb("invalid fb id".to_string()));
 	}
 
-	callbacks.on_fb_connected(user_id.clone(), me).await?;
+	sso.fb_callbacks
+		.on_fb_connected(user_id.clone(), me)
+		.await?;
 
 	if let Some(pic) = api
 		.my_picture(&request.token)
@@ -81,7 +84,7 @@ pub async fn facebook_id<'a>(
 		.map_err(|e| Error::Fb(e.to_string()))?
 		.data
 	{
-		callbacks.on_avatar_fetched(user_id, pic).await?;
+		sso.fb_callbacks.on_avatar_fetched(user_id, pic).await?;
 	}
 
 	Ok(SsoIdResponse {
@@ -125,4 +128,81 @@ pub async fn facebook_login(
 	} else {
 		Err(Error::Fb("invalid fb id".to_string()))
 	}
+}
+
+async fn facebook_id_filter_fn(
+	user_id: String,
+	request: schema::FacebookIdRequest,
+	sso: Arc<SsoResource>,
+) -> std::result::Result<impl Reply, Rejection> {
+	tracing::info!("facebook_id_filter_fn: {:?}", request);
+
+	match facebook_id(user_id, request, sso).await {
+		Ok(response) => {
+			Ok(pbwarp::protobuf_reply(&response, None)
+				.into_response())
+		}
+		Err(e) => {
+			tracing::error!("fb auth error: {}", e);
+			Ok(warp::reply::with_status(
+				reply(),
+				warp::hyper::StatusCode::INTERNAL_SERVER_ERROR,
+			)
+			.into_response())
+		}
+	}
+}
+
+async fn facebook_login_filter_fn(
+	user_id: String,
+	request: schema::FacebookIdRequest,
+	sso: Arc<SsoResource>,
+) -> std::result::Result<impl Reply, Rejection> {
+	//TODO: lockdown account and mark with superceding old account
+	tracing::info!(
+		"facebook_login_filter_fn: {:?} [{}]",
+		request,
+		user_id
+	);
+
+	match facebook_login(request, sso).await {
+		Ok(response) => {
+			Ok(pbwarp::protobuf_reply(&response, None)
+				.into_response())
+		}
+		Err(e) => {
+			tracing::error!("fb login error: {}", e);
+			Ok(warp::reply::with_status(
+				reply(),
+				warp::hyper::StatusCode::INTERNAL_SERVER_ERROR,
+			)
+			.into_response())
+		}
+	}
+}
+
+pub fn create_filters_fb(
+	user_resource: &Arc<UserLoginResource>,
+	sso_res: Arc<SsoResource>,
+) -> warp::filters::BoxedFilter<(Box<dyn warp::Reply>,)> {
+	let sso = warp::any().map(move || sso_res.clone());
+
+	let facebook_id_filter = warp::path!("facebook" / "id")
+		.and(userlogin::session_filter(user_resource.clone()))
+		.and(warp::post())
+		.and(pbwarp::protobuf_body::<schema::FacebookIdRequest>())
+		.and(sso.clone())
+		.and_then(facebook_id_filter_fn);
+
+	let facebook_login_filter = warp::path!("facebook" / "login")
+		.and(userlogin::session_filter(user_resource.clone()))
+		.and(warp::post())
+		.and(pbwarp::protobuf_body::<schema::FacebookIdRequest>())
+		.and(sso.clone())
+		.and_then(facebook_login_filter_fn);
+
+	facebook_id_filter
+		.or(facebook_login_filter)
+		.map(|reply| -> Box<dyn Reply> { Box::new(reply) })
+		.boxed()
 }

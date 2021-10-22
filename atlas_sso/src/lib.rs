@@ -137,7 +137,8 @@ use warp::{filters::BoxedFilter, Reply};
 pub struct AtlasSso;
 
 impl CustomModule for AtlasSso {
-	type Resources = Hlist![Arc<SsoResource>, Arc<UserLoginResource>];
+	type Resources =
+		Hlist![Arc<SsoResource>, Arc<UserLoginResource>,];
 
 	fn create_filter<S: ModuleResources<Self>>(
 		server: Arc<S>,
@@ -153,6 +154,7 @@ impl CustomModule for AtlasSso {
 pub struct SsoResource {
 	sso_db: Arc<dyn SsoDB>,
 	users: Arc<dyn UserDB>,
+	pub fb_callbacks: Arc<dyn fb::FbCallbacks>,
 }
 
 impl SsoResource {
@@ -160,8 +162,13 @@ impl SsoResource {
 	pub fn new(
 		sso_db: Arc<dyn SsoDB>,
 		users: Arc<dyn UserDB>,
+		fb_callbacks: Arc<dyn fb::FbCallbacks>,
 	) -> Self {
-		Self { sso_db, users }
+		Self {
+			sso_db,
+			users,
+			fb_callbacks,
+		}
 	}
 
 	pub async fn set_sso(
