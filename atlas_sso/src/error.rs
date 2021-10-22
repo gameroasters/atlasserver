@@ -21,6 +21,8 @@ pub enum Error {
 	),
 	#[error("siwa error: {0}")]
 	Siwa(#[from] sign_in_with_apple::Error),
+	#[error("fb error: {0}")]
+	Fb(String),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

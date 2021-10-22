@@ -26,6 +26,7 @@ strum = { version = "0.21", features = ["derive"] }
 sign-in-with-apple = { git = "https://github.com/gameroasters/sign-in-with-apple.git", rev="eed3b51" }
 # sign-in-with-apple = "0.1"
 protobuf = { version = "=2.22.1", features = ["with-serde"] }
+fb-api = "0.1"
 
 [dev-dependencies]
 pretty_assertions = "0.7"

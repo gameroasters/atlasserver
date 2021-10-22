@@ -114,6 +114,7 @@
 
 mod db;
 pub mod error;
+pub mod fb;
 pub mod schema;
 pub mod siwa;
 
