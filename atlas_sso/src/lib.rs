@@ -132,7 +132,7 @@ use atlasserver::{
 use error::{Error, Result};
 use std::{collections::HashMap, sync::Arc};
 use tracing::instrument;
-use warp::{filters::BoxedFilter, Reply};
+use warp::{filters::BoxedFilter, Filter, Reply};
 
 pub struct AtlasSso;
 
@@ -147,7 +147,13 @@ impl CustomModule for AtlasSso {
 			server.get_server_resources().sculpt();
 		let (sso_resource, user_resource) = reshaped.into_tuple2();
 
-		siwa::create_filters_siwa(&user_resource, sso_resource)
+		siwa::create_filters_siwa(
+			&user_resource,
+			sso_resource.clone(),
+		)
+		.or(fb::create_filters_fb(&user_resource, sso_resource))
+		.unify()
+		.boxed()
 	}
 }
 
