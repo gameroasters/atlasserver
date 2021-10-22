@@ -30,7 +30,7 @@ pub trait FbCallbacks: Send + Sync {
 }
 
 #[instrument(skip(sso, request), err)]
-pub async fn facebook_id<'a>(
+pub async fn facebook_id(
 	user_id: String,
 	request: schema::FacebookIdRequest,
 	sso: Arc<SsoResource>,
