@@ -19,12 +19,15 @@
 //!     hlist, Hlist,
 //!     userlogin::{
 //!         user::in_memory::InMemoryUserDB, sessions::InMemorySessionDB,
-//!         UserLogin, UserLoginResource,
+//!         UserLogin, UserLoginResource, UserId
 //!     }
 //! };
 //! use atlas_sso::{AtlasSso, SsoResource, InMemorySsoDB};
 //! use std::sync::Arc;
 //! # use futures::future::{Abortable, AbortHandle};
+//! use async_trait::async_trait;
+//! use atlas_sso::fb::FBCallbacks;
+//!
 //!
 //! struct MyServer{
 //!     resources: <Self as CustomServer>::Resources,
@@ -63,15 +66,38 @@
 //!     }
 //! }
 //!
+//! pub struct ExampleFBCallbacks {
+//! }
+//!
+//! #[async_trait]
+//! impl FBCallbacks for ExampleFBCallbacks {
+//!     async fn on_fb_connected(
+//!         &self,
+//!         user_id: UserId,
+//!         fb_me: fb_api::types::User,
+//!     ) -> Result<()> {
+//!         Ok(())
+//!     }
+//!
+//!     async fn on_avatar_fetched(
+//!         &self,
+//!         user_id: UserId,
+//!         picture: fb_api::types::Picture,
+//!     ) -> Result<()> {
+//!         Ok(())
+//!     }
+//! }
+//!
 //! #[tokio::main]
 //! async fn main() {
 //!     let user_db = Arc::new(InMemoryUserDB::default());
 //!     let session_db = Arc::new(InMemorySessionDB::default());
 //!     let sso_db = Arc::new(InMemorySsoDB::default());
+//!     let fb_callbacks = Arc::new(ExampleFBCallbacks::default());
 //!     
 //!     let server = MyServer {
 //!         resources: hlist![
-//!             Arc::new(SsoResource::new(sso_db, user_db.clone())),
+//!             Arc::new(SsoResource::new(sso_db, user_db.clone(), fb_callbacks)),
 //!             Arc::new(UserLoginResource::new(session_db, user_db)),
 //!         ]
 //!     };

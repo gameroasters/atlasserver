@@ -198,7 +198,7 @@ pub fn create_filters_fb(
 		.and(userlogin::session_filter(user_resource.clone()))
 		.and(warp::post())
 		.and(pbwarp::protobuf_body::<schema::FacebookIdRequest>())
-		.and(sso.clone())
+		.and(sso)
 		.and_then(facebook_login_filter_fn);
 
 	facebook_id_filter
