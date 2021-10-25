@@ -15,6 +15,8 @@ use warp::{
 
 #[derive(Debug)]
 struct ProtobufDeseralizeError {
+	//TODO: get rid of, since it was never used
+	#[allow(dead_code)]
 	cause: Box<dyn std::error::Error + Send + Sync>,
 }
 
