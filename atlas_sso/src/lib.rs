@@ -22,11 +22,11 @@
 //!         UserLogin, UserLoginResource, UserId
 //!     }
 //! };
-//! use atlas_sso::{AtlasSso, SsoResource, InMemorySsoDB};
+//! use atlas_sso::{AtlasSso, SsoResource, InMemorySsoDB, error::Result};
 //! use std::sync::Arc;
 //! # use futures::future::{Abortable, AbortHandle};
 //! use async_trait::async_trait;
-//! use atlas_sso::fb::FBCallbacks;
+//! use atlas_sso::fb::FbCallbacks;
 //!
 //!
 //! struct MyServer{
@@ -66,11 +66,10 @@
 //!     }
 //! }
 //!
-//! pub struct ExampleFBCallbacks {
-//! }
+//! pub struct ExampleFbCallbacks {}
 //!
 //! #[async_trait]
-//! impl FBCallbacks for ExampleFBCallbacks {
+//! impl FbCallbacks for ExampleFbCallbacks {
 //!     async fn on_fb_connected(
 //!         &self,
 //!         user_id: UserId,
@@ -93,7 +92,7 @@
 //!     let user_db = Arc::new(InMemoryUserDB::default());
 //!     let session_db = Arc::new(InMemorySessionDB::default());
 //!     let sso_db = Arc::new(InMemorySsoDB::default());
-//!     let fb_callbacks = Arc::new(ExampleFBCallbacks::default());
+//!     let fb_callbacks = Arc::new(ExampleFbCallbacks {});
 //!     
 //!     let server = MyServer {
 //!         resources: hlist![
