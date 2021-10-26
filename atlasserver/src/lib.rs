@@ -10,6 +10,8 @@
 #![deny(clippy::needless_update)]
 #![allow(clippy::module_name_repetitions)]
 #![allow(clippy::upper_case_acronyms)]
+//TODO: remove once this works with async_trait again
+#![allow(clippy::no_effect_underscore_binding)]
 
 pub mod error;
 /// Utilities for simplifying the use of protobuf in warp filters and reply types
