@@ -1,6 +1,3 @@
-//TODO: move into `atlas_sso` and communicate via event callbacks to s4backend
-
-// use crate::s4module::player_state::PlayerStateResource; //TODO: Facebook connect call
 use crate::error::{Error, Result};
 use crate::{
 	schema::{self, SsoIdResponse, SsoIdResponse_Result},
@@ -15,13 +12,17 @@ use std::sync::Arc;
 use tracing::instrument;
 use warp::{reply, Filter, Rejection, Reply};
 
+///Used to provide callbacks called inside the various fb functions
 #[async_trait]
 pub trait FbCallbacks: Send + Sync {
+	///Called when account is successfully connected to facebook, not on every login
+	///Only applies if the `SsoResponse` is not `AlreadyAssignedDifferently`, meaning that another account is already tied to the given facebook id
 	async fn on_fb_connected(
 		&self,
 		user_id: UserId,
 		fb_me: User,
 	) -> Result<()>;
+	///Called once facebook avatar url is fetched successfully
 	async fn on_avatar_fetched(
 		&self,
 		user_id: UserId,

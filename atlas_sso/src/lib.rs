@@ -136,6 +136,8 @@
 #![allow(clippy::module_name_repetitions)]
 //TODO:
 #![allow(clippy::missing_errors_doc)]
+//TODO: remove once this works with async_trait again
+#![allow(clippy::no_effect_underscore_binding)]
 
 mod db;
 pub mod error;
