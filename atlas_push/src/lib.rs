@@ -23,6 +23,8 @@
 	clippy::useless_conversion
 )]
 #![allow(clippy::module_name_repetitions)]
+//TODO: remove once this works with async_trait again
+#![allow(clippy::no_effect_underscore_binding)]
 
 pub mod dynamo;
 pub mod error;
