@@ -1,7 +1,10 @@
-use rusoto_core::{credential::CredentialsError, request::TlsError};
+use rusoto_core::{
+	credential::CredentialsError, request::TlsError, RusotoError,
+};
 use rusoto_dynamodb::{
 	CreateTableError, DeleteItemError, ListTablesError, PutItemError,
 };
+use rusoto_secretsmanager::GetSecretValueError;
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -34,6 +37,10 @@ pub enum Error {
 	TableNotFound(String),
 	#[error("DynamoDeserializeError for field: {0}")]
 	DynamoDeserialize(&'static str),
+	#[error("rusoto secret general error: {0}")]
+	RusotoSecret(String),
+	#[error("rusoto secret get value error: {0}")]
+	RusotoGetSecretValue(#[from] RusotoError<GetSecretValueError>),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

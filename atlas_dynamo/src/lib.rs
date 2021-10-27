@@ -10,6 +10,10 @@ use rusoto_dynamodb::{
 	DynamoDbClient, KeySchemaElement, ListTablesInput,
 	ProvisionedThroughput,
 };
+use rusoto_secretsmanager::{
+	GetSecretValueRequest, SecretsManager, SecretsManagerClient,
+};
+
 use std::collections::HashMap;
 
 pub type DynamoHashMap = HashMap<String, AttributeValue>;
@@ -221,4 +225,25 @@ pub fn db_sort_key(
 #[must_use]
 fn is_local_setup() -> bool {
 	std::env::var("DDB_LOCAL").is_ok()
+}
+
+pub async fn read_secret(
+	secret_id: &str,
+	region: Region,
+) -> Result<String> {
+	let manager = SecretsManagerClient::new(region);
+	let val = manager
+		.get_secret_value(GetSecretValueRequest {
+			secret_id: secret_id.to_string(),
+			..GetSecretValueRequest::default()
+		})
+		.await?;
+
+	if let Some(content) = val.secret_string {
+		Ok(content)
+	} else {
+		Err(error::Error::RusotoSecret(
+			"No secret string found!".to_string(),
+		))
+	}
 }
