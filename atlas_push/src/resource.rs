@@ -42,7 +42,7 @@ impl PushNotificationContext for S4PushNotificationContext {
 	}
 }
 
-pub trait PushNotificationContext: Debug {
+pub trait PushNotificationContext: Debug + Send {
 	///Use this to insert context into the map which is sent with the push notification payload
 	///The payload map will be accessible on the receiver side
 	fn insert_into_payload(
@@ -53,7 +53,9 @@ pub trait PushNotificationContext: Debug {
 
 ///Provide same insert functionality as `PushNotificationContext`
 ///Can be used to provide a custom inserting implementation for structs which already implement `PushNotificationContext`
-pub trait PushNotificationContextMapper<C>: Debug {
+pub trait PushNotificationContextMapper<C: Debug + Send>:
+	Debug + Send
+{
 	///Use this to insert context into the map which is sent with the push notification payload
 	///The payload map will be accessible on the receiver side
 	fn insert_into_payload(
@@ -97,7 +99,7 @@ impl PushNotificationResource {
 	}
 
 	///Same as send_message, but this function takes a context which implements the mapping itself
-	#[instrument(skip(self))]
+	#[instrument(skip(self, context_data))]
 	pub async fn send_message_with_mapper<
 		C: PushNotificationContext,
 	>(
@@ -117,9 +119,9 @@ impl PushNotificationResource {
 			.await
 	}
 
-	#[instrument(skip(self))]
+	#[instrument(skip(self, context_data))]
 	pub async fn send_message_with_custom_mapper<
-		C: Debug,
+		C: Debug + Send,
 		M: PushNotificationContextMapper<C>,
 	>(
 		&self,
@@ -127,7 +129,7 @@ impl PushNotificationResource {
 		title: String,
 		body: String,
 		msg_type: String,
-		context_data: Option<C>, //TODO: Abstract away
+		context_data: Option<C>,
 		context_mapper: M,
 	) -> Result<()> {
 		let mut map = HashMap::with_capacity(5);
