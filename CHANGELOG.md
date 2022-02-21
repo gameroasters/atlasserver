@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+## [0.2.0] - 2022-02-21
+
 ## Changed
 - change main server start method from verbose `atlasserver::initialize_server` to `atlasserver::init`
 - use regular content-type header instead of custom one `x-content-type`
