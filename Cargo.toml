@@ -1,10 +1,10 @@
 [package]
 name = "atlasserver"
-version = "0.2.0"
+version = "0.3.0"
 authors = [
     "extrawurst <mail@rusticorn.com>",
     "lyon <lyonbeckers@gmail.com>"]
-edition = "2018"
+edition = "2021"
 license = "MIT"
 readme = "README.md"
 description = "Atlas is a rust library for the purpose of composing REST APIs out of re-usable and extensible modules, specifically with supporting the networking needs of online gaming services in mind."
