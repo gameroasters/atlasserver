@@ -2,7 +2,7 @@
 name = "atlasserver"
 version = "0.1.2"
 authors = [
-    "Stephan Dilly <dilly.stephan@gmail.com>",
+    "extrawurst <mail@rusticorn.com>",
     "lyon <lyonbeckers@gmail.com>"]
 edition = "2018"
 license = "MIT"
